@@ -40,17 +40,17 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
   }, [config.columns]);
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-800 pb-4">
+    <section id="games" className="space-y-5 sm:space-y-6 scroll-mt-20">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 border-b border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider">
             <Gamepad2 className="w-4 h-4" />
             <span>{config.badge || "បញ្ជីហ្គេមទាំងអស់ (Game Catalogue)"}</span>
           </div>
-          <h2 className="text-2xl font-black text-white mt-1">
+          <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
             {config.title || "ជ្រើសរើសហ្គេមដែលអ្នកចង់បញ្ចូលពេជ្រ"}
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">
             {config.subtitle || "គាំទ្រការទូទាត់តាម KHQR គ្រប់ហ្គេមទាំងអស់"}
           </p>
         </div>

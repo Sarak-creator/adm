@@ -705,11 +705,11 @@ export default function AdminPage() {
       </div>
 
       {/* Navigation Tabs for CRUD Modules */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
+      <div className="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto scrollbar-none flex-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
         <button
           type="button"
           onClick={() => setActiveTab("orders")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "orders"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -725,7 +725,7 @@ export default function AdminPage() {
         <button
           type="button"
           onClick={() => setActiveTab("games")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "games"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -748,7 +748,7 @@ export default function AdminPage() {
               window.history.replaceState(null, "", url.toString());
             }
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "packages"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -771,7 +771,7 @@ export default function AdminPage() {
               window.history.replaceState(null, "", url.toString());
             }
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "landing"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -791,7 +791,7 @@ export default function AdminPage() {
               window.history.replaceState(null, "", url.toString());
             }
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "settings"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"

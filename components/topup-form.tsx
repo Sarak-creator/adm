@@ -299,14 +299,14 @@ export function TopupForm({ game }: TopupFormProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Currency Switcher Bar */}
-      <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-400" />
+          <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
           <span className="text-xs text-slate-300 font-medium">ជ្រើសរើសរូបិយប័ណ្ណទូទាត់ (Payment Currency):</span>
         </div>
-        <div className="inline-flex p-1 rounded-lg bg-slate-950 border border-slate-800">
+        <div className="inline-flex p-1 rounded-lg bg-slate-950 border border-slate-800 self-end sm:self-auto">
           <button
             type="button"
             onClick={() => setCurrency("USD")}
@@ -335,8 +335,8 @@ export function TopupForm({ game }: TopupFormProps) {
       {/* ========================================================= */}
       {/* STEP 1: Game Account Input & Real-time Verification */}
       {/* ========================================================= */}
-      <section className="glass-card rounded-2xl p-6 lg:p-7 relative overflow-hidden border-slate-800">
-        <div className="flex items-center justify-between mb-5">
+      <section className="glass-card rounded-2xl p-4 sm:p-6 lg:p-7 relative overflow-hidden border-slate-800">
+        <div className="flex items-center justify-between mb-4 sm:mb-5">
           <div className="flex items-center gap-3">
             <span className="w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 flex items-center justify-center font-display font-bold text-sm">
               1
@@ -437,29 +437,32 @@ export function TopupForm({ game }: TopupFormProps) {
       {/* ========================================================= */}
       {/* STEP 2: Denomination Selector (Diamond Packages) */}
       {/* ========================================================= */}
-      <section className="glass-card rounded-2xl p-6 lg:p-7 border-slate-800">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <span className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center font-display font-bold text-sm">
+      {/* ========================================================= */}
+      {/* STEP 2: Denomination Selector (Diamond Packages) */}
+      {/* ========================================================= */}
+      <section className="glass-card rounded-2xl p-4 sm:p-6 lg:p-7 border-slate-800">
+        <div className="flex items-center justify-between mb-4 sm:mb-5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center font-display font-bold text-xs sm:text-sm flex-shrink-0">
               2
             </span>
-            <h2 className="text-base lg:text-lg font-bold text-white">
+            <h2 className="text-sm sm:text-base lg:text-lg font-bold text-white">
               ជ្រើសរើសចំនួនពេជ្រ (Select Diamonds)
             </h2>
           </div>
-          <span className="text-xs text-slate-400">
-            {game.packages.length} កញ្ចប់ដែលអាចរកទិញបាន
+          <span className="text-[11px] sm:text-xs text-slate-400">
+            {game.packages.length} កញ្ចប់
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2.5 sm:gap-3.5">
           {game.packages.map((pkg) => {
             const isSelected = selectedPackageId === pkg.id;
             return (
               <div
                 key={pkg.id}
                 onClick={() => setSelectedPackageId(pkg.id)}
-                className={`relative p-4 rounded-xl cursor-pointer transition-all flex flex-col justify-between overflow-hidden border ${
+                className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col justify-between overflow-hidden border ${
                   isSelected
                     ? "bg-[#0f172a] border-cyan-400 shadow-neon-cyan scale-[1.02]"
                     : "bg-[#0a0e1a]/80 border-slate-800 hover:border-slate-700 hover:bg-[#0e1322]"
@@ -467,27 +470,27 @@ export function TopupForm({ game }: TopupFormProps) {
               >
                 {/* Badge if available */}
                 {pkg.badgeText && (
-                  <div className="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-amber-600 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded-bl-lg font-display uppercase tracking-wider">
+                  <div className="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-amber-600 text-slate-950 font-bold text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-bl-lg font-display uppercase tracking-wider">
                     {pkg.badgeText}
                   </div>
                 )}
 
-                <div className="flex items-start gap-3 mb-3">
+                <div className="flex items-start gap-2.5 sm:gap-3 mb-2 sm:mb-3">
                   <div
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
                       isSelected
                         ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40"
                         : "bg-slate-800/80 text-slate-400"
                     }`}
                   >
-                    <Diamond className="w-5 h-5 animate-pulse-slow" />
+                    <Diamond className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse-slow" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white leading-tight">
+                    <h3 className="text-xs sm:text-sm font-bold text-white leading-tight">
                       {pkg.name}
                     </h3>
                     {pkg.bonusDiamonds > 0 && (
-                      <span className="text-[11px] text-emerald-400 font-medium">
+                      <span className="text-[10px] sm:text-[11px] text-emerald-400 font-medium">
                         +{pkg.bonusDiamonds} Bonus
                       </span>
                     )}
@@ -497,12 +500,12 @@ export function TopupForm({ game }: TopupFormProps) {
                 {/* Pricing Tags */}
                 <div className="pt-2 border-t border-slate-800/80 flex items-baseline justify-between">
                   <div>
-                    <div className="text-sm font-bold font-display text-cyan-400">
+                    <div className="text-xs sm:text-sm font-bold font-display text-cyan-400">
                       {currency === "USD"
                         ? formatUSD(pkg.sellingPriceUSD)
                         : formatKHR(pkg.sellingPriceKHR)}
                     </div>
-                    <div className="text-[10px] text-slate-400 font-display">
+                    <div className="text-[9px] sm:text-[10px] text-slate-400 font-display">
                       {currency === "USD"
                         ? formatKHR(pkg.sellingPriceKHR)
                         : formatUSD(pkg.sellingPriceUSD)}
@@ -511,7 +514,7 @@ export function TopupForm({ game }: TopupFormProps) {
 
                   {/* Radio Indicator */}
                   <div
-                    className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                    className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border flex items-center justify-center transition-colors flex-shrink-0 ml-1 ${
                       isSelected
                         ? "border-cyan-400 bg-cyan-400"
                         : "border-slate-600 bg-transparent"
@@ -529,47 +532,47 @@ export function TopupForm({ game }: TopupFormProps) {
       {/* ========================================================= */}
       {/* STEP 3: Payment Method (Bakong KHQR) */}
       {/* ========================================================= */}
-      <section className="glass-card rounded-2xl p-6 lg:p-7 border-slate-800">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <span className="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center font-display font-bold text-sm">
+      <section className="glass-card rounded-2xl p-4 sm:p-6 lg:p-7 border-slate-800">
+        <div className="flex items-center justify-between mb-4 sm:mb-5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center font-display font-bold text-xs sm:text-sm flex-shrink-0">
               3
             </span>
-            <h2 className="text-base lg:text-lg font-bold text-white">
+            <h2 className="text-sm sm:text-base lg:text-lg font-bold text-white">
               វិធីសាស្ត្រទូទាត់ប្រាក់ (Payment Method)
             </h2>
           </div>
-          <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium">
+          <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] sm:text-xs font-medium">
             ភ្លាមៗ 100% ស្វ័យប្រវត្តិ
           </span>
         </div>
 
-        <div className="p-4 rounded-xl bg-gradient-to-br from-[#0c1424] to-[#0a0d18] border-2 border-red-500/40 relative overflow-hidden">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-xl bg-[#c51f26] flex items-center justify-center text-white font-display font-black text-xs shadow-md p-1">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-[#0c1424] to-[#0a0d18] border-2 border-red-500/40 relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#c51f26] flex items-center justify-center text-white font-display font-black text-[10px] sm:text-xs shadow-md p-1 flex-shrink-0">
                 <span className="tracking-tighter text-center leading-none">KHQR<br />BAKONG</span>
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-bold text-white">
-                    Bakong KHQR ស្វ័យប្រវត្តិ (All Banking Apps)
+                  <h3 className="text-xs sm:text-sm font-bold text-white">
+                    Bakong KHQR ស្វ័យប្រវត្តិ
                   </h3>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-red-500/20 text-red-300 font-bold">
+                  <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 font-bold">
                     Official NBC
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  ស្កេនបានគ្រប់ធនាគារទាំងអស់៖ ABA, ACLEDA, Wing, Canadia, Sathapana, Vattanac & More
+                <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
+                  ស្កេនបានគ្រប់ធនាគារទាំងអស់៖ ABA, ACLEDA, Wing, Canadia, Sathapana & More
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2 self-end sm:self-center">
-              <div className="w-4 h-4 rounded-full bg-emerald-400 flex items-center justify-center">
+              <div className="w-4 h-4 rounded-full bg-emerald-400 flex items-center justify-center flex-shrink-0">
                 <Check className="w-2.5 h-2.5 text-slate-950 stroke-[3]" />
               </div>
-              <span className="text-xs font-bold text-emerald-400">បានជ្រើសរើស (Selected)</span>
+              <span className="text-[11px] sm:text-xs font-bold text-emerald-400">បានជ្រើសរើស (Selected)</span>
             </div>
           </div>
         </div>
@@ -578,11 +581,11 @@ export function TopupForm({ game }: TopupFormProps) {
       {/* ========================================================= */}
       {/* Checkout Summary & Action Button */}
       {/* ========================================================= */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#0c1326] via-[#101b34] to-[#0c1326] border border-cyan-500/30 shadow-neon-cyan flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-[#0c1326] via-[#101b34] to-[#0c1326] border border-cyan-500/30 shadow-neon-cyan flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 sm:gap-6">
         <div className="space-y-1 text-center md:text-left">
           <div className="text-xs text-slate-400">សរុបទឹកប្រាក់ត្រូវទូទាត់ (Total Amount):</div>
-          <div className="flex items-baseline justify-center md:justify-start gap-3">
-            <span className="text-2xl lg:text-3xl font-black font-display text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-300">
+          <div className="flex items-baseline justify-center md:justify-start gap-2.5 sm:gap-3">
+            <span className="text-2xl sm:text-3xl font-black font-display text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-300">
               {selectedPackage
                 ? currency === "USD"
                   ? formatUSD(selectedPackage.sellingPriceUSD)
@@ -599,7 +602,7 @@ export function TopupForm({ game }: TopupFormProps) {
           </div>
           {verifiedName && (
             <div className="text-xs text-emerald-400 flex items-center justify-center md:justify-start gap-1 font-medium pt-0.5">
-              <ShieldCheck className="w-3.5 h-3.5" />
+              <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0" />
               <span>គណនីទទួលពេជ្រ: {verifiedName}</span>
             </div>
           )}
@@ -609,18 +612,18 @@ export function TopupForm({ game }: TopupFormProps) {
           type="button"
           onClick={handleOpenCheckout}
           disabled={isSubmitting || !selectedPackage}
-          className="w-full md:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-emerald-400 to-teal-400 hover:from-cyan-400 hover:to-emerald-300 text-slate-950 font-bold text-sm tracking-wide shadow-neon-cyan hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full md:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-emerald-400 to-teal-400 hover:from-cyan-400 hover:to-emerald-300 text-slate-950 font-bold text-xs sm:text-sm tracking-wide shadow-neon-cyan hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <>
-              <RotateCw className="w-4 h-4 animate-spin text-slate-950" />
+              <RotateCw className="w-4 h-4 animate-spin text-slate-950 flex-shrink-0" />
               <span>កំពុងបង្កើត QR Code...</span>
             </>
           ) : (
             <>
-              <Zap className="w-4 h-4 text-slate-950 group-hover:animate-bounce" />
+              <Zap className="w-4 h-4 text-slate-950 group-hover:animate-bounce flex-shrink-0" />
               <span>ទូទាត់ប្រាក់តាម KHQR (Pay with KHQR)</span>
-              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform flex-shrink-0" />
             </>
           )}
         </button>
@@ -630,11 +633,11 @@ export function TopupForm({ game }: TopupFormProps) {
       {/* MODAL 1: Guide "Where is my ID?" */}
       {/* ========================================================= */}
       {showIdGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#0c111e] border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-[#0c111e] border border-slate-700 rounded-2xl max-w-lg w-full p-4 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <HelpCircle className="w-5 h-5 text-cyan-400" />
+              <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 flex-shrink-0" />
                 <span>របៀបស្វែងរក ID ក្នុង {game.name}</span>
               </h3>
               <button
@@ -652,7 +655,7 @@ export function TopupForm({ game }: TopupFormProps) {
                 <p className="text-slate-400 italic">{game.guideTextEn}</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/20 text-slate-300">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/20 text-slate-300">
                 <h4 className="font-bold text-cyan-300 mb-1">ឧទាហរណ៍ជាក់ស្តែង:</h4>
                 <p>ប្រសិនបើក្នុងហ្គេមបង្ហាញ: <span className="font-mono text-white font-bold">User ID: 12345678 (2024)</span></p>
                 <p className="mt-1">
@@ -677,13 +680,13 @@ export function TopupForm({ game }: TopupFormProps) {
       {/* MODAL 2: Dynamic Bakong KHQR Modal with 3-Min Countdown */}
       {/* ========================================================= */}
       {showQRModal && activeOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-          <div className="bg-[#0b101d] border border-cyan-500/30 rounded-3xl max-w-md w-full p-6 shadow-2xl relative space-y-5 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+          <div className="bg-[#0b101d] border border-cyan-500/30 rounded-2xl sm:rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl relative space-y-4 sm:space-y-5 overflow-hidden max-h-[92vh] overflow-y-auto">
             {/* Top Red KHQR Banner */}
-            <div className="relative -mx-6 -mt-6 bg-[#d32f2f] text-white py-3 px-6 flex items-center justify-between shadow-md">
+            <div className="relative -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 bg-[#d32f2f] text-white py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-2">
-                <QrCode className="w-5 h-5 text-white" />
-                <span className="font-display font-extrabold text-sm tracking-wider uppercase">
+                <QrCode className="w-5 h-5 text-white flex-shrink-0" />
+                <span className="font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase">
                   Bakong KHQR
                 </span>
               </div>
@@ -693,7 +696,7 @@ export function TopupForm({ game }: TopupFormProps) {
                   setShowQRModal(false);
                   setIsPolling(false);
                 }}
-                className="text-white/80 hover:text-white transition-colors"
+                className="text-white/80 hover:text-white transition-colors p-1"
               >
                 <X className="w-5 h-5" />
               </button>

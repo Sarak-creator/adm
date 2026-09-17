@@ -455,11 +455,11 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
       </div>
 
       {/* Subtabs for Setting Categories */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-3">
+      <div className="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto scrollbar-none flex-nowrap -mx-2 px-2 sm:mx-0 sm:px-0">
         <button
           type="button"
           onClick={() => setActiveSubTab("moogold")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeSubTab === "moogold"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -472,7 +472,7 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
         <button
           type="button"
           onClick={() => setActiveSubTab("bakong")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeSubTab === "bakong"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -485,7 +485,7 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
         <button
           type="button"
           onClick={() => setActiveSubTab("operations")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeSubTab === "operations"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -501,7 +501,7 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
             setActiveSubTab("admins");
             fetchAdminUsers();
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeSubTab === "admins"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
@@ -517,7 +517,7 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
         <button
           type="button"
           onClick={() => setActiveSubTab("custom")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeSubTab === "custom"
               ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
               : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
