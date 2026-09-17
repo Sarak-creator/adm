@@ -1,0 +1,172 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  EXPIRED
+}
+
+enum FulfillmentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String?   @unique
+  email         String?   @unique
+  phone         String?   @unique
+  name          String?
+  passwordHash  String?
+  twoFactorPin  String?
+  role          Role      @default(USER)
+  balance       Decimal   @default(0.0)
+  isActive      Boolean   @default(true)
+  orders        Order[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Game {
+  id                 String    @id @default(cuid())
+  name               String
+  nameKh             String?
+  slug               String    @unique
+  bannerUrl          String
+  iconUrl            String
+  publisher          String?
+  hasZoneId          Boolean   @default(false)
+  zoneIdPlaceholder  String?   @default("Zone ID (e.g. 2024)")
+  userIdPlaceholder  String?   @default("User ID (e.g. 12345678)")
+  isActive           Boolean   @default(true)
+  sortOrder          Int       @default(0)
+  packages           Package[]
+  orders             Order[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@map("games")
+}
+
+model Package {
+  id                 String   @id @default(cuid())
+  gameId             String
+  game               Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  name               String
+  diamondsCount      Int
+  bonusDiamonds      Int      @default(0)
+  moogoldProductId   String
+  moogoldVariationId String
+  originalPriceUSD   Decimal  @default(0.0)
+  sellingPriceUSD    Decimal  @default(0.0)
+  sellingPriceKHR    Decimal  @default(0.0)
+  isAvailable        Boolean  @default(true)
+  badgeText          String?
+  sortOrder          Int      @default(0)
+  orders             Order[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([gameId])
+  @@map("packages")
+}
+
+model Order {
+  id                String            @id @default(cuid())
+  orderNumber       String            @unique
+  userId            String?
+  user              User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  gameId            String
+  game              Game              @relation(fields: [gameId], references: [id])
+  packageId         String
+  package           Package           @relation(fields: [packageId], references: [id])
+  
+  // Game Account Credentials
+  inGameUserId      String
+  inGameZoneId      String?
+  inGameNickname    String?
+  
+  // Pricing & Payment
+  amountUSD         Decimal
+  amountKHR         Decimal
+  paymentMethod     String            @default("KHQR")
+  paymentStatus     PaymentStatus     @default(PENDING)
+  fulfillmentStatus FulfillmentStatus @default(PENDING)
+  
+  // MooGold Tracking
+  moogoldOrderId    String?
+  moogoldResponse   Json?
+  failureReason     String?
+  
+  // Bakong KHQR details
+  qrCodeString      String?           @db.Text
+  qrExpiresAt       DateTime?
+  paidAt            DateTime?
+  completedAt       DateTime?
+
+  webhookLogs       PaymentWebhookLog[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([gameId])
+  @@index([packageId])
+  @@index([paymentStatus])
+  @@index([fulfillmentStatus])
+  @@map("orders")
+}
+
+model PaymentWebhookLog {
+  id        String   @id @default(cuid())
+  orderId   String?
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  payload   Json
+  status    String
+  signature String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@map("payment_webhook_logs")
+}
+
+model AdminSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("admin_settings")
+}
+
+model SystemSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String   @db.Text
+  isEncrypted Boolean  @default(false)
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
