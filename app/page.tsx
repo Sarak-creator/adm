@@ -20,6 +20,9 @@ import {
   HelpCircle,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Helper to render icon by name
 function DynamicIcon({ name, className }: { name: string; className?: string }) {
   switch (name) {

@@ -5,6 +5,9 @@ import { TopupForm } from "@/components/topup-form";
 import { ShieldCheck, Zap, Diamond, Award, Clock, HelpCircle } from "lucide-react";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface GamePageProps {
   params: Promise<{ slug: string }>;
 }
