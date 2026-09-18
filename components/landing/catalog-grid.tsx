@@ -30,17 +30,17 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
   const gridColsClass = useMemo(() => {
     switch (config.columns) {
       case 2:
-        return "grid-cols-1 sm:grid-cols-2";
+        return "grid-cols-2";
       case 4:
-        return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
+        return "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
       case 3:
       default:
-        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+        return "grid-cols-2 sm:grid-cols-2 lg:grid-cols-3";
     }
   }, [config.columns]);
 
   return (
-    <section id="games" className="space-y-5 sm:space-y-6 scroll-mt-20">
+    <section id="games" className="space-y-4 sm:space-y-6 scroll-mt-20">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider">
@@ -80,8 +80,8 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
       </div>
 
       {filteredGames.length === 0 ? (
-        <div className="rounded-2xl p-12 text-center bg-white dark:bg-[#0c101e] border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm dark:shadow-none">
-          <Gamepad2 className="w-12 h-12 text-slate-400 dark:text-slate-600 mx-auto" />
+        <div className="rounded-2xl p-8 sm:p-12 text-center bg-white dark:bg-[#0c101e] border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm dark:shadow-none">
+          <Gamepad2 className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 dark:text-slate-600 mx-auto" />
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
             រកមិនឃើញហ្គេមដែលត្រូវនឹង &ldquo;{search}&rdquo; ទេ
           </p>
@@ -94,7 +94,7 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
           </button>
         </div>
       ) : (
-        <div className={`grid ${gridColsClass} gap-6`}>
+        <div className={`grid ${gridColsClass} gap-3 sm:gap-6`}>
           {filteredGames.map((game, idx) => {
             const minPricePkg =
               game.packages && game.packages.length > 0
@@ -108,11 +108,11 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
               <Link
                 key={game.id}
                 href={`/games/${game.slug}`}
-                className="group rounded-2xl overflow-hidden bg-white dark:bg-[#0c101e] border border-slate-200 dark:border-slate-800 hover:border-cyan-500 transition-all shadow-sm hover:shadow-xl dark:hover:shadow-neon-cyan hover:-translate-y-1 flex flex-col justify-between"
+                className="group rounded-xl sm:rounded-2xl overflow-hidden bg-white dark:bg-[#0c101e] border border-slate-200 dark:border-slate-800 hover:border-cyan-500 transition-all shadow-sm hover:shadow-xl dark:hover:shadow-neon-cyan hover:-translate-y-0.5 sm:hover:-translate-y-1 flex flex-col justify-between"
               >
                 <div>
                   {/* Game Card Header Image */}
-                  <div className="relative h-44 w-full overflow-hidden bg-slate-900">
+                  <div className="relative h-28 sm:h-44 w-full overflow-hidden bg-slate-900">
                     <Image
                       src={game.bannerUrl}
                       alt={game.name}
@@ -124,21 +124,21 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
 
                     {/* Popularity Badge */}
                     {idx === 0 && config.featuredBadgeText && (
-                      <div className="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-amber-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1 font-display">
-                        <Flame className="w-3 h-3" />
+                      <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-gradient-to-r from-red-600 to-amber-500 text-white text-[8px] sm:text-[10px] font-extrabold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1 font-display">
+                        <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                         <span>{config.featuredBadgeText}</span>
                       </div>
                     )}
 
                     {/* Publisher Badge */}
                     {game.publisher && (
-                      <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded border border-white/20 font-display">
+                      <div className="hidden sm:block absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded border border-white/20 font-display">
                         {game.publisher}
                       </div>
                     )}
 
                     {/* In-Game Icon Avatar */}
-                    <div className="absolute -bottom-3 left-4 w-14 h-14 rounded-xl overflow-hidden border-2 border-cyan-400 shadow-md bg-slate-900">
+                    <div className="absolute -bottom-2.5 sm:-bottom-3 left-2.5 sm:left-4 w-9 h-9 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl overflow-hidden border-2 border-cyan-400 shadow-md bg-slate-900">
                       <Image
                         src={game.iconUrl}
                         alt={game.name}
@@ -150,36 +150,38 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
                   </div>
 
                   {/* Card Body */}
-                  <div className="p-5 pt-6 space-y-2">
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                  <div className="p-2.5 sm:p-5 pt-4 sm:pt-6 space-y-1 sm:space-y-2">
+                    <h3 className="text-xs sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors line-clamp-1">
                       {game.name}
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium line-clamp-1">
                       {game.nameKh}
                     </p>
 
-                    <div className="pt-2 flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                      <Zap className="w-3.5 h-3.5" />
-                      <span>ផ្ទៀងផ្ទាត់ឈ្មោះស្វ័យប្រវត្ត & ចូលភ្លាមៗ</span>
+                    <div className="hidden sm:flex pt-2 items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                      <Zap className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span className="truncate">ផ្ទៀងផ្ទាត់ឈ្មោះស្វ័យប្រវត្ត & ចូលភ្លាមៗ</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Footer with Starting Price & Action */}
-                <div className="p-5 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50 dark:bg-slate-900/30">
+                <div className="p-2.5 sm:p-5 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-0 bg-slate-50 dark:bg-slate-900/30">
                   <div>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">ចាប់ពី (Starting):</span>
-                    <div className="text-sm font-black text-cyan-600 dark:text-cyan-400 font-display">
+                    <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">
+                      ចាប់ពី:
+                    </span>
+                    <div className="text-xs sm:text-sm font-black text-cyan-600 dark:text-cyan-400 font-display">
                       {minPricePkg ? formatUSD(minPricePkg.sellingPriceUSD) : "$0.99"}{" "}
-                      <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+                      <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-normal">
                         ({minPricePkg ? formatKHR(minPricePkg.sellingPriceKHR) : "4,100 ៛"})
                       </span>
                     </div>
                   </div>
 
-                  <span className="px-3.5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 group-hover:bg-cyan-500 group-hover:text-slate-950 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors flex items-center gap-1 shadow-sm">
+                  <span className="w-full sm:w-auto justify-center px-2 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-200 dark:bg-slate-800 group-hover:bg-cyan-500 group-hover:text-slate-950 text-slate-800 dark:text-slate-200 text-[10px] sm:text-xs font-bold transition-colors flex items-center gap-1 shadow-sm">
                     <span>បញ្ចូលពេជ្រ</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </span>
                 </div>
               </Link>
