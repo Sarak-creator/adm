@@ -919,6 +919,7 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
                     src={config.hero.backgroundImageUrl}
                     alt="Hero Preview"
                     className="w-full h-full object-cover"
+                    style={{ opacity: (config.hero.bgOpacity ?? 45) / 100 }}
                   />
                 </div>
               )}
@@ -934,6 +935,79 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
                 className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 font-mono"
                 placeholder="e.g. /images/hero-bg.jpg or https://..."
               />
+            </div>
+
+            {/* Hero Card Opacity Slider Control */}
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 mt-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>កម្រិតពន្លឺថ្លាផ្ទៃ Hero Card (Hero Card Opacity)</span>
+                  </label>
+                  <p className="text-[11px] text-slate-400">
+                    កំណត់កម្រិតភាពច្បាស់នៃរូបភាពផ្ទៃខាងក្រោយ Hero Banner (0% = ងងឹតសុទ្ធ / 100% = ភ្លឺពេញលេញ)
+                  </p>
+                </div>
+                <div className="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-mono font-bold text-xs">
+                  {config.hero.bgOpacity ?? 45}%
+                </div>
+              </div>
+
+              {/* Range Slider */}
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] text-slate-500 font-mono">0%</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="5"
+                  value={config.hero.bgOpacity ?? 45}
+                  onChange={(e) =>
+                    setConfig((prev) => ({
+                      ...prev,
+                      hero: {
+                        ...prev.hero,
+                        bgOpacity: parseInt(e.target.value, 10),
+                      },
+                    }))
+                  }
+                  className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                />
+                <span className="text-[11px] text-slate-500 font-mono">100%</span>
+              </div>
+
+              {/* Quick Presets */}
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <span className="text-[11px] text-slate-400">Presets:</span>
+                {[
+                  { label: "ស្រអាប់ទន់ (20%)", val: 20 },
+                  { label: "លំនាំដើម (35%)", val: 35 },
+                  { label: "មធ្យម (50%)", val: 50 },
+                  { label: "ច្បាស់ (70%)", val: 70 },
+                  { label: "ភ្លឺខ្លាំង (100%)", val: 100 },
+                ].map((preset) => (
+                  <button
+                    key={preset.val}
+                    type="button"
+                    onClick={() =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        hero: {
+                          ...prev.hero,
+                          bgOpacity: preset.val,
+                        },
+                      }))
+                    }
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all ${
+                      (config.hero.bgOpacity ?? 45) === preset.val
+                        ? "bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-sm"
+                        : "bg-slate-900 text-slate-400 hover:text-white border-slate-800 hover:border-slate-700"
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </section>

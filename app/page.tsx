@@ -147,12 +147,15 @@ export default async function HomePage() {
       // 2. Hero Section
       case "hero": {
         const hero = landingConfig.hero;
+        const opacityPercent = typeof hero.bgOpacity === "number" ? hero.bgOpacity : 45;
+        const imageOpacity = Math.min(Math.max(opacityPercent / 100, 0), 1);
+
         return (
           <div
             key="hero"
             className={`relative rounded-2xl sm:rounded-3xl overflow-hidden border ${theme.border} bg-gradient-to-br from-sky-50/80 via-slate-50 to-emerald-50/70 dark:bg-[#070b16] p-5 sm:p-8 lg:p-14 ${theme.shadow} min-h-[360px] sm:min-h-[420px] flex items-center shadow-md dark:shadow-none`}
           >
-            {/* Full-Bleed Background Image Layer */}
+            {/* Full-Bleed Background Image Layer with Admin-Controlled Opacity */}
             <div className="absolute inset-0 z-0">
               <Image
                 src={hero.backgroundImageUrl || "/images/hero-bg.jpg"}
@@ -160,7 +163,8 @@ export default async function HomePage() {
                 fill
                 priority
                 unoptimized
-                className="object-cover object-right lg:object-center opacity-30 dark:opacity-45 mix-blend-luminosity scale-105"
+                style={{ opacity: imageOpacity }}
+                className="object-cover object-right lg:object-center mix-blend-luminosity scale-105 transition-opacity duration-300"
               />
               {/* Gradients Overlay for Crystal Clear Text Readability */}
               <div className="absolute inset-0 bg-gradient-to-r from-slate-50/95 via-slate-50/85 to-slate-50/40 dark:from-[#070b16] dark:via-[#070b16]/95 sm:dark:via-[#070b16]/90 dark:to-[#070b16]/60 sm:dark:to-[#070b16]/40" />

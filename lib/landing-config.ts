@@ -17,6 +17,7 @@ export interface HeroConfig {
   ctaLink: string;
   secondaryBadgeText: string;
   backgroundImageUrl: string;
+  bgOpacity?: number; // 0 to 100 percentage
   themeColor: "cyan" | "emerald" | "amber" | "purple";
   trustBadges: Array<{ id: string; icon: string; text: string }>;
 }
@@ -178,6 +179,7 @@ export const DEFAULT_LANDING_CONFIG: LandingPageConfig = {
     ctaLink: "/games/mobile-legends",
     secondaryBadgeText: "MooGold Live Reseller API",
     backgroundImageUrl: "/images/hero-bg.jpg",
+    bgOpacity: 45,
     themeColor: "cyan",
     trustBadges: [
       { id: "tb1", icon: "Zap", text: "ចូលពេជ្រក្នុង 5 វិនាទី" },
