@@ -90,6 +90,7 @@ export interface SupportBannerConfig {
 }
 
 export interface LandingPageConfig {
+  themeMode: "dark" | "light";
   sectionsOrder: SectionId[];
   sectionsVisibility: Record<SectionId, boolean>;
   hero: HeroConfig;
@@ -147,6 +148,7 @@ export const ALL_SECTION_METADATA: Array<{ id: SectionId; name: string; nameKh: 
 ];
 
 export const DEFAULT_LANDING_CONFIG: LandingPageConfig = {
+  themeMode: "dark",
   sectionsOrder: [
     "ticker",
     "hero",
@@ -308,6 +310,7 @@ export function mergeLandingConfig(partial?: Partial<LandingPageConfig> | null):
   return {
     ...DEFAULT_LANDING_CONFIG,
     ...partial,
+    themeMode: partial.themeMode === "light" ? "light" : "dark",
     sectionsOrder:
       Array.isArray(partial.sectionsOrder) && partial.sectionsOrder.length > 0
         ? partial.sectionsOrder

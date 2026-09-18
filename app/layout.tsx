@@ -26,6 +26,8 @@ const outfit = Outfit({
 });
 
 import { Navbar } from "@/components/navbar";
+import { dbService } from "@/lib/db-service";
+import { ThemeListener } from "@/components/theme-listener";
 
 export const metadata: Metadata = {
   title: "អាណាចក្រDiamond (Diamond Kingdom) | បញ្ចូលពេជ្រហ្គេមទាន់ចិត្ត Bakong KHQR",
@@ -33,14 +35,21 @@ export const metadata: Metadata = {
   keywords: ["Top up MLBB Cambodia", "Bakong KHQR Diamond", "អាណាចក្រDiamond", "បញ្ចូលពេជ្រ MLBB", "MooGold Cambodia", "Free Fire Diamonds", "PUBG UC KHQR"],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const themeMode = await dbService.getThemeMode();
+
   return (
-    <html lang="km" className={`${kantumruy.variable} ${battambang.variable} ${outfit.variable}`}>
-      <body className="bg-[#060913] text-slate-100 min-h-screen flex flex-col font-khmer antialiased selection:bg-cyan-500 selection:text-slate-950">
+    <html
+      lang="km"
+      className={`${themeMode} ${kantumruy.variable} ${battambang.variable} ${outfit.variable}`}
+      data-theme={themeMode}
+    >
+      <body className="bg-[var(--background)] text-[var(--foreground)] min-h-screen flex flex-col font-khmer antialiased selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-300">
+        <ThemeListener initialTheme={themeMode} />
         {/* Mobile & Desktop Universal Responsive Header */}
         <Navbar />
 

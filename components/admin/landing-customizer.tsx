@@ -35,6 +35,8 @@ import {
   LayoutGrid,
   Send,
   MessageSquare,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 interface LandingCustomizerProps {
@@ -47,8 +49,8 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [activeSubTab, setActiveSubTab] = useState<
-    "sections" | "hero" | "ticker" | "catalog" | "how_it_works" | "features" | "faq" | "support"
-  >("sections");
+    "theme" | "sections" | "hero" | "ticker" | "catalog" | "how_it_works" | "features" | "faq" | "support"
+  >("theme");
 
   // File upload state for Hero background
   const [isUploadingBg, setIsUploadingBg] = useState(false);
@@ -95,6 +97,40 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
       onShowToast(err.message || "Error saving config", "error");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // Handle live theme change
+  const handleApplyTheme = async (mode: "dark" | "light") => {
+    setConfig((prev) => ({ ...prev, themeMode: mode }));
+    try {
+      const res = await fetch("/api/theme", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ themeMode: mode }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        try {
+          const channel = new BroadcastChannel("anajak_theme_channel");
+          channel.postMessage({ type: "THEME_CHANGED", themeMode: mode });
+          channel.close();
+        } catch {}
+        try {
+          localStorage.setItem("anajak_theme_mode", mode);
+        } catch {}
+        onShowToast(
+          mode === "light"
+            ? "បានប្តូរទៅ របៀបពន្លឺ (Light Mode) ជោគជ័យ! Landing page បានផ្លាស់ប្តូរផ្ទាល់ភ្លាមៗ។"
+            : "បានប្តូរទៅ របៀបងងឹត (Dark Mode) ជោគជ័យ! Landing page បានផ្លាស់ប្តូរផ្ទាល់ភ្លាមៗ。",
+          "success"
+        );
+      } else {
+        onShowToast(data.error || "បរាជ័យក្នុងការប្តូរ Theme", "error");
+      }
+    } catch (e: unknown) {
+      const err = e as Error;
+      onShowToast(err.message, "error");
     }
   };
 
@@ -322,6 +358,7 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
       {/* Navigation Sub-Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-slate-800">
         {[
+          { id: "theme", label: "ម៉ូដពន្លឺ/ងងឹត (Theme Mode)", icon: Sun },
           { id: "sections", label: "លំដាប់ផ្នែក & បើក/បិទ (Sections Order)", icon: Layers },
           { id: "hero", label: "ផ្ទាំងធំ (Hero Banner)", icon: Sparkles },
           { id: "ticker", label: "របាររំកិល (Live Ticker)", icon: Flame },
@@ -350,6 +387,201 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
           );
         })}
       </div>
+
+      {/* ========================================================= */}
+      {/* 0. THEME MODE (DARK / LIGHT) LIVE SWITCHER               */}
+      {/* ========================================================= */}
+      {activeSubTab === "theme" && (
+        <section className="glass-card rounded-2xl p-6 border-slate-800 space-y-6">
+          <div className="border-b border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-bold font-mono uppercase">
+                  ADMIN ONLY CONTROL
+                </span>
+                <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Sync Active
+                </span>
+              </div>
+              <h3 className="text-base font-bold text-white mt-1 flex items-center gap-2">
+                <Sun className="w-5 h-5 text-amber-400" />
+                <span>ការកំណត់ Theme Mode (Dark Mode & Light Mode)</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
+                មានតែអ្នកគ្រប់គ្រង (Admin) ប៉ុណ្ណោះដែលអាចកំណត់ Dark ឬ Light Mode បាន។ នៅពេលលោកអ្នកចុចជ្រើសរើស គេហទំព័រ Landing Page និងទំព័រទាំងអស់នឹងផ្លាស់ប្តូរផ្ទាល់ភ្លាមៗ (Real-time Live Change) ដោយមិនបាច់ Refresh ឡើយ!
+              </p>
+            </div>
+
+            <div className="flex-shrink-0">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold font-display bg-slate-900 border-slate-700 text-slate-200">
+                <span>Current Mode:</span>
+                <span className={config.themeMode === "light" ? "text-amber-400 uppercase" : "text-cyan-400 uppercase"}>
+                  {config.themeMode === "light" ? "☀️ Light Mode" : "🌙 Dark Mode"}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Card 1: Dark Mode */}
+            <div
+              onClick={() => handleApplyTheme("dark")}
+              className={`relative rounded-2xl p-5 border-2 cursor-pointer transition-all duration-200 overflow-hidden ${
+                config.themeMode === "dark"
+                  ? "bg-[#090e1c] border-cyan-400 shadow-neon-cyan scale-[1.01]"
+                  : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+              }`}
+            >
+              {/* Selected Badge */}
+              {config.themeMode === "dark" && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-cyan-500 text-slate-950 text-[10px] font-bold shadow-md">
+                  <Check className="w-3 h-3" />
+                  <span>កំពុងប្រើ (Active)</span>
+                </div>
+              )}
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+                  <Moon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>របៀបងងឹត (Dark Mode)</span>
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-mono">Cyberpunk Gaming Theme</p>
+                </div>
+              </div>
+
+              {/* Visual Mini Mockup Preview */}
+              <div className="mt-4 rounded-xl bg-[#060913] border border-slate-800 p-3 space-y-2">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <div className="h-2 w-16 bg-cyan-500/60 rounded" />
+                  <div className="h-2 w-8 bg-emerald-500/60 rounded" />
+                </div>
+                <div className="h-8 rounded-lg bg-slate-900/90 border border-cyan-500/20 flex items-center px-2">
+                  <div className="h-2 w-24 bg-slate-400 rounded" />
+                </div>
+                <div className="grid grid-cols-2 gap-1.5 pt-1">
+                  <div className="h-6 rounded bg-[#0d111e] border border-slate-800" />
+                  <div className="h-6 rounded bg-[#0d111e] border border-slate-800" />
+                </div>
+              </div>
+
+              <div className="mt-4 text-xs text-slate-300 space-y-1">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                  <span>✓</span>
+                  <span>ផ្ទៃខាងក្រោយពណ៌ខ្មៅរលោង Cyberpunk Space Navy</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                  <span>✓</span>
+                  <span>ពន្លឺ Neon Glow ពណ៌ Cyan, Emerald និង Gold</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                  <span>✓</span>
+                  <span>ស័ក្តិសមបំផុតសម្រាប់ការលេងហ្គេម និងកាត់បន្ថយការចាំងភ្នែក</span>
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleApplyTheme("dark");
+                  }}
+                  className={`w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
+                    config.themeMode === "dark"
+                      ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
+                      : "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"
+                  }`}
+                >
+                  <Moon className="w-3.5 h-3.5" />
+                  <span>{config.themeMode === "dark" ? "កំពុងបើកដំណើរការ (Active)" : "ប្តូរទៅ Dark Mode"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Card 2: Light Mode */}
+            <div
+              onClick={() => handleApplyTheme("light")}
+              className={`relative rounded-2xl p-5 border-2 cursor-pointer transition-all duration-200 overflow-hidden ${
+                config.themeMode === "light"
+                  ? "bg-slate-900 border-amber-400 shadow-amber-500/20 scale-[1.01]"
+                  : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+              }`}
+            >
+              {/* Selected Badge */}
+              {config.themeMode === "light" && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-bold shadow-md">
+                  <Check className="w-3 h-3" />
+                  <span>កំពុងប្រើ (Active)</span>
+                </div>
+              )}
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                  <Sun className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>របៀបពន្លឺ (Light Mode)</span>
+                  </h4>
+                  <p className="text-[11px] text-amber-300 font-mono">Clean Modern Gaming Theme</p>
+                </div>
+              </div>
+
+              {/* Visual Mini Mockup Preview */}
+              <div className="mt-4 rounded-xl bg-[#f8fafc] border border-slate-300 p-3 space-y-2">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                  <div className="h-2 w-16 bg-cyan-600 rounded" />
+                  <div className="h-2 w-8 bg-emerald-600 rounded" />
+                </div>
+                <div className="h-8 rounded-lg bg-white border border-slate-200 shadow-sm flex items-center px-2">
+                  <div className="h-2 w-24 bg-slate-700 rounded" />
+                </div>
+                <div className="grid grid-cols-2 gap-1.5 pt-1">
+                  <div className="h-6 rounded bg-white border border-slate-200 shadow-sm" />
+                  <div className="h-6 rounded bg-white border border-slate-200 shadow-sm" />
+                </div>
+              </div>
+
+              <div className="mt-4 text-xs text-slate-300 space-y-1">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                  <span>✓</span>
+                  <span>ផ្ទៃខាងក្រោយពណ៌សភ្លឺស្អាត Crisp Slate-50 & Clean White</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                  <span>✓</span>
+                  <span>អក្សរដិតស្រឡះភ្នែក Slate-900 និងកាត Elevate ទាន់សម័យ</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                  <span>✓</span>
+                  <span>ស័ក្តិសមសម្រាប់អ្នកចូលចិត្តទិញពេជ្រពេលថ្ងៃ ស្រឡះភ្នែក និងស្អាតប្លែក</span>
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleApplyTheme("light");
+                  }}
+                  className={`w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
+                    config.themeMode === "light"
+                      ? "bg-amber-400 text-slate-950 shadow-md font-bold"
+                      : "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"
+                  }`}
+                >
+                  <Sun className="w-3.5 h-3.5" />
+                  <span>{config.themeMode === "light" ? "កំពុងបើកដំណើរការ (Active)" : "ប្តូរទៅ Light Mode"}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ========================================================= */}
       {/* 1. SECTIONS ORDER & VISIBILITY MANAGER */}

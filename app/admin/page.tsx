@@ -28,6 +28,8 @@ import {
   Image as ImageIcon,
   LayoutGrid,
   LogOut,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { LandingCustomizer } from "@/components/admin/landing-customizer";
 import { SystemSettingsForm } from "@/components/admin/system-settings-form";
@@ -108,6 +110,64 @@ export default function AdminPage() {
   const [balance, setBalance] = useState<number | null>(null);
   const [currency, setCurrency] = useState("USD");
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+
+  // Global Theme Mode State (Only Admin can set dark or light mode)
+  const [currentTheme, setCurrentTheme] = useState<"dark" | "light">("dark");
+  const [isUpdatingTheme, setIsUpdatingTheme] = useState(false);
+
+  // Fetch current theme mode on load
+  const fetchTheme = async () => {
+    try {
+      const res = await fetch("/api/theme", { cache: "no-store" });
+      const data = await res.json();
+      if (data.success && data.themeMode) {
+        setCurrentTheme(data.themeMode === "light" ? "light" : "dark");
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  useEffect(() => {
+    fetchTheme();
+  }, []);
+
+  const handleToggleTheme = async () => {
+    const newMode = currentTheme === "dark" ? "light" : "dark";
+    setIsUpdatingTheme(true);
+    try {
+      const res = await fetch("/api/theme", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ themeMode: newMode }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCurrentTheme(newMode);
+        // Instant broadcast across tabs
+        try {
+          const channel = new BroadcastChannel("anajak_theme_channel");
+          channel.postMessage({ type: "THEME_CHANGED", themeMode: newMode });
+          channel.close();
+        } catch {}
+        try {
+          localStorage.setItem("anajak_theme_mode", newMode);
+        } catch {}
+        showToast(
+          newMode === "light"
+            ? "បានប្តូរទៅ របៀបពន្លឺ (Light Mode) ជោគជ័យ! Landing page បានផ្លាស់ប្តូរផ្ទាល់ភ្លាមៗ។"
+            : "បានប្តូរទៅ របៀបងងឹត (Dark Mode) ជោគជ័យ! Landing page បានផ្លាស់ប្តូរផ្ទាល់ភ្លាមៗ。"
+        );
+      } else {
+        showToast(data.error || "បរាជ័យក្នុងការប្តូរ Theme", "error");
+      }
+    } catch (err: unknown) {
+      const error = err as Error;
+      showToast(error.message, "error");
+    } finally {
+      setIsUpdatingTheme(false);
+    }
+  };
 
   // Orders State
   const [orders, setOrders] = useState<OrderItem[]>([]);
@@ -615,13 +675,45 @@ export default function AdminPage() {
           </h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center flex-wrap gap-2.5 sm:gap-3">
+          {/* Admin Live Theme Mode Toggle */}
+          <button
+            type="button"
+            onClick={handleToggleTheme}
+            disabled={isUpdatingTheme}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border transition-all shadow-sm hover:scale-[1.02] active:scale-95 ${
+              currentTheme === "light"
+                ? "bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30 shadow-amber-500/10"
+                : "bg-cyan-950/70 text-cyan-300 border-cyan-500/40 hover:bg-cyan-900/70 shadow-cyan-500/10"
+            }`}
+            title="ប្តូរ Dark Mode / Light Mode សម្រាប់គេហទំព័រទាំងមូល (Live Change on Landing Page)"
+          >
+            {currentTheme === "light" ? (
+              <>
+                <Sun className={`w-3.5 h-3.5 text-amber-400 ${isUpdatingTheme ? "animate-spin" : ""}`} />
+                <span>របៀបពន្លឺ (Light Mode)</span>
+                <span className="px-1.5 py-0.2 rounded text-[10px] bg-amber-400/20 text-amber-300 font-mono">
+                  LIVE
+                </span>
+              </>
+            ) : (
+              <>
+                <Moon className={`w-3.5 h-3.5 text-cyan-400 ${isUpdatingTheme ? "animate-spin" : ""}`} />
+                <span>របៀបងងឹត (Dark Mode)</span>
+                <span className="px-1.5 py-0.2 rounded text-[10px] bg-cyan-400/20 text-cyan-300 font-mono">
+                  LIVE
+                </span>
+              </>
+            )}
+          </button>
+
           <button
             type="button"
             onClick={() => {
               fetchBalance();
               fetchOrders();
               fetchGames();
+              fetchTheme();
               showToast("បានទាញទិន្នន័យចុងក្រោយពី Supabase រួចរាល់!");
             }}
             disabled={isLoadingBalance || isLoadingGames}

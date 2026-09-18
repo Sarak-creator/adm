@@ -586,6 +586,60 @@ export class DatabaseService {
   public async resetLandingConfig(): Promise<LandingPageConfig> {
     return this.saveLandingConfig(DEFAULT_LANDING_CONFIG);
   }
+
+  /**
+   * Fetch current theme mode ("dark" | "light")
+   */
+  public async getThemeMode(): Promise<"dark" | "light"> {
+    try {
+      const setting = await prisma.adminSetting.findUnique({
+        where: { key: "site_theme_mode" },
+      });
+      if (setting?.value === "light" || setting?.value === "dark") {
+        return setting.value;
+      }
+    } catch {
+      // fallback to landing config
+    }
+    const landing = await this.getLandingConfig();
+    return landing.themeMode || "dark";
+  }
+
+  /**
+   * Set global site theme mode ("dark" | "light")
+   */
+  public async setThemeMode(mode: "dark" | "light"): Promise<"dark" | "light"> {
+    const validMode = mode === "light" ? "light" : "dark";
+
+    try {
+      await prisma.adminSetting.upsert({
+        where: { key: "site_theme_mode" },
+        create: {
+          key: "site_theme_mode",
+          value: validMode,
+          description: "Global site theme mode: dark or light",
+        },
+        update: {
+          value: validMode,
+        },
+      });
+    } catch (e) {
+      console.warn("Could not persist site_theme_mode to DB, updated in-memory:", e);
+    }
+
+    // Also synchronize into landing config
+    try {
+      const currentLanding = await this.getLandingConfig();
+      if (currentLanding.themeMode !== validMode) {
+        currentLanding.themeMode = validMode;
+        await this.saveLandingConfig(currentLanding);
+      }
+    } catch (e) {
+      console.warn("Could not sync themeMode into landing config:", e);
+    }
+
+    return validMode;
+  }
 }
 
 export const dbService = new DatabaseService();
