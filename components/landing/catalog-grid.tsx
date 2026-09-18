@@ -112,7 +112,7 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
               >
                 <div>
                   {/* Game Card Header Image */}
-                  <div className="relative h-28 sm:h-40 w-full overflow-hidden bg-slate-900">
+                  <div className="relative h-32 sm:h-44 w-full overflow-hidden bg-slate-900">
                     <Image
                       src={game.bannerUrl}
                       alt={game.name}
@@ -137,8 +137,8 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
                       </div>
                     )}
 
-                    {/* In-Game Icon Avatar - elevated with high z-index and clear visibility */}
-                    <div className="absolute bottom-2 left-2.5 sm:left-4 w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-cyan-400 shadow-xl bg-slate-900 z-20 group-hover:scale-105 transition-transform">
+                    {/* In-Game Icon Avatar - large & prominent */}
+                    <div className="absolute bottom-2 left-2.5 sm:bottom-3 sm:left-4 w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-[3px] border-cyan-400 shadow-2xl bg-slate-900 z-20 group-hover:scale-105 transition-transform">
                       <Image
                         src={game.iconUrl}
                         alt={game.name}
