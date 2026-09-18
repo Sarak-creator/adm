@@ -112,7 +112,7 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
               >
                 <div>
                   {/* Game Card Header Image */}
-                  <div className="relative h-28 sm:h-44 w-full overflow-hidden bg-slate-900">
+                  <div className="relative h-28 sm:h-40 w-full overflow-hidden bg-slate-900">
                     <Image
                       src={game.bannerUrl}
                       alt={game.name}
@@ -120,11 +120,11 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       unoptimized
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-80 dark:opacity-90" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
 
                     {/* Popularity Badge */}
                     {idx === 0 && config.featuredBadgeText && (
-                      <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-gradient-to-r from-red-600 to-amber-500 text-white text-[8px] sm:text-[10px] font-extrabold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1 font-display">
+                      <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-gradient-to-r from-red-600 to-amber-500 text-white text-[8px] sm:text-[10px] font-extrabold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1 font-display z-10">
                         <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                         <span>{config.featuredBadgeText}</span>
                       </div>
@@ -132,13 +132,13 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
 
                     {/* Publisher Badge */}
                     {game.publisher && (
-                      <div className="hidden sm:block absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded border border-white/20 font-display">
+                      <div className="hidden sm:block absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded border border-white/20 font-display z-10">
                         {game.publisher}
                       </div>
                     )}
 
-                    {/* In-Game Icon Avatar */}
-                    <div className="absolute -bottom-2.5 sm:-bottom-3 left-2.5 sm:left-4 w-9 h-9 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl overflow-hidden border-2 border-cyan-400 shadow-md bg-slate-900">
+                    {/* In-Game Icon Avatar - elevated with high z-index and clear visibility */}
+                    <div className="absolute bottom-2 left-2.5 sm:left-4 w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-cyan-400 shadow-xl bg-slate-900 z-20 group-hover:scale-105 transition-transform">
                       <Image
                         src={game.iconUrl}
                         alt={game.name}
@@ -149,16 +149,16 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
                     </div>
                   </div>
 
-                  {/* Card Body */}
-                  <div className="p-2.5 sm:p-5 pt-4 sm:pt-6 space-y-1 sm:space-y-2">
-                    <h3 className="text-xs sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors line-clamp-1">
+                  {/* Card Body - clean spacing with no overlapping obstruction */}
+                  <div className="p-2.5 sm:p-5 pt-3 sm:pt-4 space-y-1 sm:space-y-1.5">
+                    <h3 className="text-xs sm:text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors line-clamp-1">
                       {game.name}
                     </h3>
                     <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium line-clamp-1">
                       {game.nameKh}
                     </p>
 
-                    <div className="hidden sm:flex pt-2 items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    <div className="hidden sm:flex pt-1.5 items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                       <Zap className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">ផ្ទៀងផ្ទាត់ឈ្មោះស្វ័យប្រវត្ត & ចូលភ្លាមៗ</span>
                     </div>
