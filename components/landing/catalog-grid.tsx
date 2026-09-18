@@ -41,16 +41,16 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
 
   return (
     <section id="games" className="space-y-5 sm:space-y-6 scroll-mt-20">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
         <div>
-          <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider">
             <Gamepad2 className="w-4 h-4" />
             <span>{config.badge || "បញ្ជីហ្គេមទាំងអស់ (Game Catalogue)"}</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
             {config.title || "ជ្រើសរើសហ្គេមដែលអ្នកចង់បញ្ចូលពេជ្រ"}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 sm:mt-1">
             {config.subtitle || "គាំទ្រការទូទាត់តាម KHQR គ្រប់ហ្គេមទាំងអស់"}
           </p>
         </div>
@@ -58,19 +58,19 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
         {/* Real-time Search Bar */}
         {config.showSearchBar && (
           <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 pointer-events-none" />
             <input
               type="text"
               placeholder="ស្វែងរកហ្គេម (Search game)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-9 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-sans"
+              className="w-full pl-9 pr-9 py-2 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-sans shadow-sm dark:shadow-none"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -80,15 +80,15 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
       </div>
 
       {filteredGames.length === 0 ? (
-        <div className="glass-card rounded-2xl p-12 text-center border-slate-800 space-y-3">
-          <Gamepad2 className="w-12 h-12 text-slate-600 mx-auto" />
-          <p className="text-sm font-semibold text-slate-300">
+        <div className="rounded-2xl p-12 text-center bg-white dark:bg-[#0c101e] border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm dark:shadow-none">
+          <Gamepad2 className="w-12 h-12 text-slate-400 dark:text-slate-600 mx-auto" />
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
             រកមិនឃើញហ្គេមដែលត្រូវនឹង &ldquo;{search}&rdquo; ទេ
           </p>
           <button
             type="button"
             onClick={() => setSearch("")}
-            className="text-xs text-cyan-400 hover:underline"
+            className="text-xs text-cyan-600 dark:text-cyan-400 hover:underline font-medium"
           >
             សម្អាតការស្វែងរក (Clear search)
           </button>
@@ -108,11 +108,11 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
               <Link
                 key={game.id}
                 href={`/games/${game.slug}`}
-                className="group glass-card rounded-2xl overflow-hidden border-slate-800 hover:border-cyan-500/50 transition-all hover:shadow-neon-cyan hover:-translate-y-1 flex flex-col justify-between"
+                className="group rounded-2xl overflow-hidden bg-white dark:bg-[#0c101e] border border-slate-200 dark:border-slate-800 hover:border-cyan-500 transition-all shadow-sm hover:shadow-xl dark:hover:shadow-neon-cyan hover:-translate-y-1 flex flex-col justify-between"
               >
                 <div>
                   {/* Game Card Header Image */}
-                  <div className="relative h-44 w-full overflow-hidden bg-slate-950">
+                  <div className="relative h-44 w-full overflow-hidden bg-slate-900">
                     <Image
                       src={game.bannerUrl}
                       alt={game.name}
@@ -120,7 +120,7 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       unoptimized
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d111e] via-[#0d111e]/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-80 dark:opacity-90" />
 
                     {/* Popularity Badge */}
                     {idx === 0 && config.featuredBadgeText && (
@@ -132,13 +132,13 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
 
                     {/* Publisher Badge */}
                     {game.publisher && (
-                      <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded border border-white/10 font-display">
+                      <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded border border-white/20 font-display">
                         {game.publisher}
                       </div>
                     )}
 
                     {/* In-Game Icon Avatar */}
-                    <div className="absolute -bottom-3 left-4 w-14 h-14 rounded-xl overflow-hidden border-2 border-cyan-400 shadow-lg bg-slate-900">
+                    <div className="absolute -bottom-3 left-4 w-14 h-14 rounded-xl overflow-hidden border-2 border-cyan-400 shadow-md bg-slate-900">
                       <Image
                         src={game.iconUrl}
                         alt={game.name}
@@ -151,14 +151,14 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
 
                   {/* Card Body */}
                   <div className="p-5 pt-6 space-y-2">
-                    <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                       {game.name}
                     </h3>
-                    <p className="text-xs text-slate-400 font-medium">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                       {game.nameKh}
                     </p>
 
-                    <div className="pt-2 flex items-center gap-2 text-xs text-emerald-400">
+                    <div className="pt-2 flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                       <Zap className="w-3.5 h-3.5" />
                       <span>ផ្ទៀងផ្ទាត់ឈ្មោះស្វ័យប្រវត្ត & ចូលភ្លាមៗ</span>
                     </div>
@@ -166,18 +166,18 @@ export function CatalogGrid({ games, config }: CatalogGridProps) {
                 </div>
 
                 {/* Footer with Starting Price & Action */}
-                <div className="p-5 pt-3 border-t border-slate-800/80 flex items-center justify-between bg-slate-900/30">
+                <div className="p-5 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50 dark:bg-slate-900/30">
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase">ចាប់ពី (Starting from):</span>
-                    <div className="text-sm font-black text-cyan-400 font-display">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">ចាប់ពី (Starting):</span>
+                    <div className="text-sm font-black text-cyan-600 dark:text-cyan-400 font-display">
                       {minPricePkg ? formatUSD(minPricePkg.sellingPriceUSD) : "$0.99"}{" "}
-                      <span className="text-xs text-slate-400 font-normal">
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">
                         ({minPricePkg ? formatKHR(minPricePkg.sellingPriceKHR) : "4,100 ៛"})
                       </span>
                     </div>
                   </div>
 
-                  <span className="px-3.5 py-2 rounded-xl bg-slate-800 group-hover:bg-cyan-500 group-hover:text-slate-950 text-slate-200 text-xs font-bold transition-colors flex items-center gap-1">
+                  <span className="px-3.5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 group-hover:bg-cyan-500 group-hover:text-slate-950 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors flex items-center gap-1 shadow-sm">
                     <span>បញ្ចូលពេជ្រ</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>

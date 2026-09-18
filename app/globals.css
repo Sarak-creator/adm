@@ -11,7 +11,7 @@
 
 html.light,
 :root[data-theme="light"] {
-  --background: #f8fafc;
+  --background: #f1f5f9;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-border: #e2e8f0;
@@ -30,11 +30,11 @@ body {
 }
 
 html.light body {
-  background-color: #f8fafc;
+  background-color: #f1f5f9;
   background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(6, 182, 212, 0.08), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 60%, rgba(168, 85, 247, 0.05), transparent),
-    radial-gradient(ellipse 50% 30% at 0% 80%, rgba(16, 185, 129, 0.06), transparent);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(6, 182, 212, 0.12), transparent),
+    radial-gradient(ellipse 70% 50% at 100% 40%, rgba(168, 85, 247, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 0% 70%, rgba(16, 185, 129, 0.09), transparent);
 }
 
 /* Custom Cyberpunk Glows and Aesthetics */
@@ -43,9 +43,19 @@ html.light body {
   box-shadow: 0 0 15px -3px rgba(0, 240, 255, 0.3), inset 0 0 10px -3px rgba(0, 240, 255, 0.15);
 }
 
+html.light .neon-border-cyan {
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.25);
+}
+
 .neon-border-emerald {
   border-color: rgba(16, 185, 129, 0.5);
   box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.4), inset 0 0 10px -3px rgba(16, 185, 129, 0.2);
+}
+
+html.light .neon-border-emerald {
+  border-color: rgba(16, 185, 129, 0.6);
+  box-shadow: 0 4px 20px -2px rgba(16, 185, 129, 0.25);
 }
 
 .neon-border-gold {
@@ -128,146 +138,20 @@ html.light body {
 /* LIGHT MODE COMPREHENSIVE GAMING STYLES                   */
 /* ======================================================== */
 
-/* Header & Sticky Navbar */
-html.light header {
-  background-color: rgba(255, 255, 255, 0.92) !important;
-  border-bottom-color: #e2e8f0 !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Top Announcement Banner */
-html.light div.from-cyan-950\/70,
-html.light .bg-gradient-to-r.from-cyan-950\/70 {
-  background: linear-gradient(90deg, #e0f2fe, #f3e8ff, #ecfdf5) !important;
-  border-bottom-color: #bae6fd !important;
-}
-html.light div.from-cyan-950\/70 .text-cyan-300 {
-  color: #0369a1 !important;
-}
-
-/* Glass Cards & Containers */
+/* Glass Cards & Containers in Light Mode */
 html.light .glass-card {
-  background: rgba(255, 255, 255, 0.92) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06) !important;
 }
 
 html.light .glass-card-hover:hover {
   background: #ffffff !important;
   border-color: #06b6d4 !important;
-  box-shadow: 0 12px 30px -5px rgba(6, 182, 212, 0.18) !important;
+  box-shadow: 0 12px 30px -5px rgba(6, 182, 212, 0.2) !important;
 }
 
-/* Base text color overrides for Light Mode */
-html.light .text-white {
-  color: #0f172a;
-}
-html.light .text-slate-100 {
-  color: #0f172a !important;
-}
-html.light .text-slate-200 {
-  color: #1e293b !important;
-}
-html.light .text-slate-300 {
-  color: #334155 !important;
-}
-html.light .text-slate-400 {
-  color: #64748b !important;
-}
-html.light .text-slate-500 {
-  color: #64748b !important;
-}
-
-/* Maintain text-white on gradient buttons */
-html.light button.bg-gradient-to-r,
-html.light a.bg-gradient-to-r,
-html.light button.bg-gradient-to-br,
-html.light a.bg-gradient-to-br {
-  color: #0f172a;
-}
-
-/* Border overrides */
-html.light .border-slate-800,
-html.light .border-slate-800\/80,
-html.light .border-slate-800\/60,
-html.light .border-slate-800\/40,
-html.light .border-slate-700\/60,
-html.light .border-slate-700 {
-  border-color: #e2e8f0 !important;
-}
-
-/* Dark background containers mapped to crisp elevated white */
-html.light .bg-slate-900,
-html.light .bg-slate-900\/90,
-html.light .bg-slate-900\/80,
-html.light .bg-slate-900\/70,
-html.light .bg-slate-900\/60,
-html.light .bg-slate-900\/40,
-html.light .bg-slate-900\/30,
-html.light .bg-slate-950,
-html.light .bg-\[\#070a14\]\/90,
-html.light .bg-\[\#080d1a\],
-html.light .bg-\[\#090e1c\],
-html.light .bg-\[\#0c101e\],
-html.light .bg-\[\#060913\],
-html.light .bg-\[\#0a0d18\],
-html.light .bg-\[\#0b101d\],
-html.light .bg-\[\#0a0e1a\]\/80,
-html.light .bg-\[\#0e1322\],
-html.light .bg-\[\#0f172a\] {
-  background-color: #ffffff !important;
-}
-
-html.light .hover\:bg-\[\#0e1322\]:hover {
-  background-color: #f8fafc !important;
-}
-
-/* Package card selected state */
-html.light .border-cyan-400.shadow-neon-cyan.bg-\[\#0f172a\] {
-  background-color: #f0fdfa !important;
-  border-color: #06b6d4 !important;
-  box-shadow: 0 0 15px -2px rgba(6, 182, 212, 0.3) !important;
-}
-
-/* KHQR card in topup form */
-html.light .from-\[\#0c1424\].to-\[\#0a0d18\] {
-  background: linear-gradient(135deg, #fff1f2, #ffffff) !important;
-  border-color: #fca5a5 !important;
-}
-
-/* Subtle panel sections */
-html.light .bg-slate-800,
-html.light .bg-slate-800\/50,
-html.light .bg-slate-800\/40 {
-  background-color: #f1f5f9 !important;
-}
-
-/* Hero Section in Light Mode */
-html.light .bg-\[\#070b16\] {
-  background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 25px -5px rgba(6, 182, 212, 0.12) !important;
-}
-
-html.light .bg-gradient-to-r.from-\[\#070b16\] {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 55%, rgba(255, 255, 255, 0.6) 100%) !important;
-}
-html.light .bg-gradient-to-t.from-\[\#070b16\] {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.95), transparent 75%) !important;
-}
-
-/* Game Card in Catalog */
-html.light .group.rounded-2xl.border-slate-800 {
-  background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
-  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.04) !important;
-}
-html.light .group.rounded-2xl.border-slate-800:hover {
-  border-color: #06b6d4 !important;
-  box-shadow: 0 12px 25px -5px rgba(6, 182, 212, 0.15) !important;
-}
-
-/* Inputs, Selects & Search Bars */
+/* Interactive form inputs in Light Mode */
 html.light input:not([type="checkbox"]):not([type="radio"]),
 html.light select,
 html.light textarea {
@@ -278,30 +162,6 @@ html.light textarea {
 html.light input::placeholder,
 html.light textarea::placeholder {
   color: #94a3b8 !important;
-}
-
-/* Top-up Form Game Detail Header */
-html.light .bg-gradient-to-r.from-\[\#090e1c\].via-\[\#10182f\].to-\[\#090e1c\] {
-  background: linear-gradient(to right, #ffffff, #f0fdfa, #ffffff) !important;
-  border-color: #e2e8f0 !important;
-  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Mobile Slide-Out Drawer */
-html.light .bg-\[\#080d1a\].rounded-t-3xl {
-  background-color: #ffffff !important;
-  border-top-color: #06b6d4 !important;
-  color: #0f172a !important;
-}
-
-/* Footer in Light Mode */
-html.light footer {
-  background-color: #f1f5f9 !important;
-  border-top-color: #e2e8f0 !important;
-  color: #64748b !important;
-}
-html.light footer .bg-\[\#05070e\] {
-  background-color: #f1f5f9 !important;
 }
 
 /* Scrollbars in Light Mode */
