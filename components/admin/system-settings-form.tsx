@@ -55,7 +55,7 @@ interface SystemSettingsFormProps {
 export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
   const [settings, setSettings] = useState<MaskedSetting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeSubTab, setActiveSubTab] = useState<"moogold" | "bakong" | "operations" | "custom" | "admins">("moogold");
+  const [activeSubTab, setActiveSubTab] = useState<"moogold" | "payway" | "bakong" | "operations" | "custom" | "admins">("moogold");
 
   // Admin Users state
   const [adminUsers, setAdminUsers] = useState<AdminUserItem[]>([]);
@@ -82,6 +82,17 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
   const [showMgSecret, setShowMgSecret] = useState(false);
   const [isTestingMg, setIsTestingMg] = useState(false);
   const [mgTestResult, setMgTestResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  // ABA PayWay local state
+  const [abaMerchantId, setAbaMerchantId] = useState("ec478611");
+  const [abaApiKey, setAbaApiKey] = useState("");
+  const [abaApiUrl, setAbaApiUrl] = useState("https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/purchase");
+  const [abaCheckUrl, setAbaCheckUrl] = useState("https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/check-transaction-2");
+  const [abaMode, setAbaMode] = useState<"sandbox" | "live">("sandbox");
+  const [abaEncryptKey, setAbaEncryptKey] = useState(true);
+  const [showAbaApiKey, setShowAbaApiKey] = useState(false);
+  const [isTestingAba, setIsTestingAba] = useState(false);
+  const [abaTestResult, setAbaTestResult] = useState<{ success: boolean; message: string; mode?: string } | null>(null);
 
   // Bakong local state
   const [bakongAccountId, setBakongAccountId] = useState("");
@@ -134,6 +145,15 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
         if (map.has("BAKONG_ACCOUNT_ID")) setBakongAccountId(map.get("BAKONG_ACCOUNT_ID")!.value);
         if (map.has("BAKONG_API_TOKEN")) setBakongApiToken(map.get("BAKONG_API_TOKEN")!.value);
         if (map.has("BAKONG_MERCHANT_NAME")) setBakongMerchantName(map.get("BAKONG_MERCHANT_NAME")!.value);
+
+        if (map.has("ABA_PAYWAY_MERCHANT_ID")) setAbaMerchantId(map.get("ABA_PAYWAY_MERCHANT_ID")!.value);
+        if (map.has("ABA_PAYWAY_API_KEY")) setAbaApiKey(map.get("ABA_PAYWAY_API_KEY")!.value);
+        if (map.has("ABA_PAYWAY_API_URL")) {
+          const url = map.get("ABA_PAYWAY_API_URL")!.value;
+          setAbaApiUrl(url);
+          setAbaMode(url.includes("checkout-sandbox") ? "sandbox" : "live");
+        }
+        if (map.has("ABA_PAYWAY_CHECK_URL")) setAbaCheckUrl(map.get("ABA_PAYWAY_CHECK_URL")!.value);
 
         if (map.has("MAINTENANCE_MODE")) {
           setMaintenanceMode(map.get("MAINTENANCE_MODE")!.value === "true");
@@ -242,6 +262,70 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
       toast("បានរក្សាទុកការកំណត់ MooGold API ក្នុង Supabase ដោយជោគជ័យ!");
     } finally {
       setIsSavingSection(false);
+    }
+  };
+
+  // ABA Mode switcher
+  const handleAbaModeChange = (mode: "sandbox" | "live") => {
+    setAbaMode(mode);
+    if (mode === "sandbox") {
+      setAbaApiUrl("https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/purchase");
+      setAbaCheckUrl("https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/check-transaction-2");
+    } else {
+      setAbaApiUrl("https://checkout.payway.com.kh/api/payment-gateway/v1/payments/purchase");
+      setAbaCheckUrl("https://checkout.payway.com.kh/api/payment-gateway/v1/payments/check-transaction-2");
+    }
+  };
+
+  // Save ABA PayWay Section
+  const handleSaveAbaPayway = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingSection(true);
+    try {
+      const keyIsMasked = abaApiKey.includes("••••");
+
+      await saveSingleSetting("ABA_PAYWAY_MERCHANT_ID", abaMerchantId.trim(), false, "ABA PayWay Merchant ID");
+      if (!keyIsMasked && abaApiKey.trim()) {
+        await saveSingleSetting("ABA_PAYWAY_API_KEY", abaApiKey.trim(), abaEncryptKey, "ABA PayWay Public/API Key (AES-256-GCM)");
+      }
+      await saveSingleSetting("ABA_PAYWAY_API_URL", abaApiUrl.trim(), false, "ABA PayWay Purchase API Endpoint");
+      await saveSingleSetting("ABA_PAYWAY_CHECK_URL", abaCheckUrl.trim(), false, "ABA PayWay Check Transaction API Endpoint");
+
+      toast("បានរក្សាទុកការកំណត់ ABA PayWay ក្នុង Supabase ដោយជោគជ័យ!");
+    } finally {
+      setIsSavingSection(false);
+    }
+  };
+
+  // Test live connection to ABA PayWay
+  const handleTestAbaPaywayConnection = async () => {
+    setIsTestingAba(true);
+    setAbaTestResult(null);
+    try {
+      const keyIsMasked = abaApiKey.includes("••••");
+      const res = await fetch("/api/admin/payway/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          merchantId: abaMerchantId.trim(),
+          apiKey: keyIsMasked ? undefined : abaApiKey.trim(),
+          apiUrl: abaApiUrl.trim(),
+        }),
+      });
+      const data = await res.json();
+      setAbaTestResult({
+        success: Boolean(data.success),
+        message: data.message || (data.success ? "ការតភ្ជាប់ជោគជ័យ!" : "បរាជ័យ"),
+        mode: data.mode,
+      });
+    } catch (e: unknown) {
+      const err = e as Error;
+      setAbaTestResult({
+        success: false,
+        message: err.message || "Network error: មិនអាចតភ្ជាប់ទៅ ABA PayWay បានទេ",
+      });
+    } finally {
+      setIsTestingAba(false);
     }
   };
 
@@ -467,6 +551,22 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
         >
           <Server className="w-4 h-4" />
           <span>MooGold Reseller API</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveSubTab("payway")}
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+            activeSubTab === "payway"
+              ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
+              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+          }`}
+        >
+          <CreditCard className="w-4 h-4 text-[#005f82] dark:text-cyan-400" />
+          <span>ABA PayWay Gateway</span>
+          <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-[#005f82]/30 text-cyan-300 border border-[#005f82]/50">
+            {abaMode === "live" ? "LIVE" : "SANDBOX"}
+          </span>
         </button>
 
         <button
@@ -786,6 +886,213 @@ export function SystemSettingsForm({ onShowToast }: SystemSettingsFormProps) {
                     </span>
                   </div>
                 </label>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-4 border-t border-slate-800">
+              <button
+                type="submit"
+                disabled={isSavingSection}
+                className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-neon-cyan transition-all"
+              >
+                <Save className="w-4 h-4" />
+                <span>{isSavingSection ? "កំពុងរក្សាទុក..." : "រក្សាទុកក្នុង Supabase"}</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      )}
+
+      {/* SUBTAB: ABA PAYWAY GATEWAY */}
+      {activeSubTab === "payway" && (
+        <form onSubmit={handleSaveAbaPayway} className="space-y-6">
+          <div className="glass-card rounded-2xl p-6 border-slate-800 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-7 h-7 rounded-lg bg-[#005f82] text-white flex items-center justify-center font-black text-[10px] shadow-md">
+                    ABA
+                  </span>
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <span>ABA PayWay Payment Gateway (Stored in Supabase)</span>
+                  </h3>
+                </div>
+                <p className="text-xs text-slate-400">
+                  កំណត់ Merchant ID, API Key, និងប្តូររវាង Sandbox (Testing) ឬ Production (Live Real Money)
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleTestAbaPaywayConnection}
+                  disabled={isTestingAba}
+                  className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-bold flex items-center gap-2 transition-all shadow-sm"
+                >
+                  <Zap className={`w-3.5 h-3.5 text-cyan-400 ${isTestingAba ? "animate-pulse" : ""}`} />
+                  <span>{isTestingAba ? "កំពុងតេស្ត..." : "តេស្តតភ្ជាប់ ABA PayWay"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Test Result Message */}
+            {abaTestResult && (
+              <div
+                className={`p-4 rounded-xl text-xs font-medium flex items-start gap-3 border ${
+                  abaTestResult.success
+                    ? "bg-emerald-950/60 text-emerald-200 border-emerald-500/40"
+                    : "bg-red-950/60 text-red-200 border-red-500/40"
+                }`}
+              >
+                {abaTestResult.success ? (
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                ) : (
+                  <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                )}
+                <div className="space-y-1">
+                  <p className="font-bold text-sm">{abaTestResult.success ? "ការតភ្ជាប់ជោគជ័យ!" : "ការតភ្ជាប់បរាជ័យ"}</p>
+                  <p className="text-xs opacity-90 leading-relaxed">{abaTestResult.message}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Mode Switcher: Sandbox vs Live */}
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+              <label className="text-xs font-bold text-slate-200 block">
+                របៀបដំណើរការ ABA PayWay (Environment Mode)
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleAbaModeChange("sandbox")}
+                  className={`p-3.5 rounded-xl border text-left transition-all flex items-start gap-3 ${
+                    abaMode === "sandbox"
+                      ? "bg-cyan-500/10 border-cyan-500 text-white shadow-md"
+                      : "bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700"
+                  }`}
+                >
+                  <div className={`w-3 h-3 rounded-full mt-1 flex-shrink-0 ${abaMode === "sandbox" ? "bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" : "bg-slate-600"}`} />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-white">🟢 Sandbox Mode (តេស្តសាកល្បង)</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                      ប្រើ Endpoint <code>checkout-sandbox.payway.com.kh</code> សម្រាប់តេស្ត (មិនកាត់ប្រាក់ពិតប្រាកដ)
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleAbaModeChange("live")}
+                  className={`p-3.5 rounded-xl border text-left transition-all flex items-start gap-3 ${
+                    abaMode === "live"
+                      ? "bg-red-500/10 border-red-500 text-white shadow-md"
+                      : "bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700"
+                  }`}
+                >
+                  <div className={`w-3 h-3 rounded-full mt-1 flex-shrink-0 ${abaMode === "live" ? "bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.8)]" : "bg-slate-600"}`} />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-white">🔴 Live Production (កាត់ប្រាក់ពិត)</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                      ប្រើ Endpoint <code>checkout.payway.com.kh</code> សម្រាប់ឱ្យអតិថិជនស្កេនតាម App ABA Mobile ពិតប្រាកដ
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Merchant ID */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  ABA PayWay Merchant ID
+                </label>
+                <input
+                  type="text"
+                  value={abaMerchantId}
+                  onChange={(e) => setAbaMerchantId(e.target.value)}
+                  placeholder="e.g. ec478611"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono text-cyan-300 focus:outline-none focus:border-cyan-400"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">Config Key: <code>ABA_PAYWAY_MERCHANT_ID</code> (ក្នុង Supabase)</p>
+              </div>
+
+              {/* API Key / Secret with encryption toggle */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                    <span>ABA PayWay API Key (Public/Secret Key)</span>
+                    {abaEncryptKey ? (
+                      <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold border border-emerald-500/40 flex items-center gap-1">
+                        <Lock className="w-2.5 h-2.5" /> AES-256 Encrypted
+                      </span>
+                    ) : (
+                      <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 text-[10px] font-bold border border-amber-500/40">
+                        Plaintext
+                      </span>
+                    )}
+                  </label>
+                  <label className="flex items-center gap-1 text-[11px] text-slate-400 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={abaEncryptKey}
+                      onChange={(e) => setAbaEncryptKey(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded text-cyan-500 bg-slate-950 border-slate-700"
+                    />
+                    <span>ការពារដោយ Encryption</span>
+                  </label>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type={showAbaApiKey ? "text" : "password"}
+                    value={abaApiKey}
+                    onChange={(e) => setAbaApiKey(e.target.value)}
+                    placeholder="បញ្ចូល API Key ថ្មីដើម្បីកែប្រែ..."
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 pr-10 text-xs font-mono text-white focus:outline-none focus:border-cyan-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAbaApiKey(!showAbaApiKey)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                  >
+                    {showAbaApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">Config Key: <code>ABA_PAYWAY_API_KEY</code></p>
+              </div>
+
+              {/* API Purchase URL */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  ABA Purchase API Endpoint
+                </label>
+                <input
+                  type="text"
+                  value={abaApiUrl}
+                  onChange={(e) => setAbaApiUrl(e.target.value)}
+                  placeholder="https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/purchase"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-300 focus:outline-none focus:border-cyan-400"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">Config Key: <code>ABA_PAYWAY_API_URL</code></p>
+              </div>
+
+              {/* Check Transaction URL */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  ABA Check Transaction API Endpoint
+                </label>
+                <input
+                  type="text"
+                  value={abaCheckUrl}
+                  onChange={(e) => setAbaCheckUrl(e.target.value)}
+                  placeholder="https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/check-transaction-2"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-300 focus:outline-none focus:border-cyan-400"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">Config Key: <code>ABA_PAYWAY_CHECK_URL</code></p>
               </div>
             </div>
 
