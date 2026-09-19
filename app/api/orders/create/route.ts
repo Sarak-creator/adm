@@ -11,6 +11,7 @@ const createOrderSchema = z.object({
   inGameZoneId: z.string().optional().nullable(),
   inGameNickname: z.string().optional().nullable(),
   currency: z.enum(["USD", "KHR"]).default("USD"),
+  paymentMethod: z.enum(["ABA", "BAKONG"]).default("ABA"),
 });
 
 export async function POST(req: NextRequest) {
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { gameSlug, packageId, inGameUserId, inGameZoneId, inGameNickname, currency } =
+    const { gameSlug, packageId, inGameUserId, inGameZoneId, inGameNickname, currency, paymentMethod } =
       parseResult.data;
 
     // 1. Verify Game and Package exist in cached DB
@@ -51,38 +52,40 @@ export async function POST(req: NextRequest) {
     // 2. Generate Unique Order Number
     const orderNumber = generateOrderNumber();
 
-    // 3. Attempt dynamic ABA PayWay QR creation first (with official ABA KHQR & Mobile Deeplink)
+    // 3. Generate QR based on chosen paymentMethod
     let qrCodeString = "";
     let qrCodeDataUrl = "";
     let abapayDeeplink: string | undefined;
     let appCheckoutUrl: string | undefined;
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    try {
-      const { createPaywayPurchase } = await import("@/lib/aba-payway");
-      const paywayRes = await createPaywayPurchase({
-        orderNumber,
-        amountUSD: packageItem.sellingPriceUSD,
-        items: [
-          {
-            name: `${game.name} - ${packageItem.name}`,
-            quantity: 1,
-            price: packageItem.sellingPriceUSD,
-          },
-        ],
-      });
+    if (paymentMethod === "ABA") {
+      try {
+        const { createPaywayPurchase } = await import("@/lib/aba-payway");
+        const paywayRes = await createPaywayPurchase({
+          orderNumber,
+          amountUSD: packageItem.sellingPriceUSD,
+          items: [
+            {
+              name: `${game.name} - ${packageItem.name}`,
+              quantity: 1,
+              price: packageItem.sellingPriceUSD,
+            },
+          ],
+        });
 
-      if (paywayRes.success && paywayRes.qrString) {
-        qrCodeString = paywayRes.qrString;
-        qrCodeDataUrl = paywayRes.qrImage || "";
-        abapayDeeplink = paywayRes.abapayDeeplink;
-        appCheckoutUrl = paywayRes.appCheckoutUrl;
+        if (paywayRes.success && paywayRes.qrString) {
+          qrCodeString = paywayRes.qrString;
+          qrCodeDataUrl = paywayRes.qrImage || "";
+          abapayDeeplink = paywayRes.abapayDeeplink;
+          appCheckoutUrl = paywayRes.appCheckoutUrl;
+        }
+      } catch (abaErr) {
+        console.warn("ABA PayWay call failed, falling back to local Bakong KHQR:", abaErr);
       }
-    } catch (abaErr) {
-      console.warn("ABA PayWay call failed, falling back to local Bakong KHQR:", abaErr);
     }
 
-    // If ABA PayWay not configured or failed, fallback to local Bakong KHQR generator
+    // If Bakong chosen or ABA PayWay fallback triggered:
     if (!qrCodeString || !qrCodeDataUrl) {
       const khqrResult = await createDynamicKHQR({
         orderNumber,

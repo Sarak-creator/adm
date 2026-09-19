@@ -38,6 +38,7 @@ export function TopupForm({ game }: TopupFormProps) {
     game.packages[0]?.id || ""
   );
   const [currency, setCurrency] = useState<"USD" | "KHR">("USD");
+  const [paymentMethod, setPaymentMethod] = useState<"ABA" | "BAKONG">("ABA");
 
   // Verification State
   const [isVerifying, setIsVerifying] = useState(false);
@@ -169,6 +170,7 @@ export function TopupForm({ game }: TopupFormProps) {
           inGameZoneId: game.hasZoneId ? zoneId.trim() : null,
           inGameNickname: verifiedName || null,
           currency,
+          paymentMethod,
         }),
       });
 
@@ -533,7 +535,7 @@ export function TopupForm({ game }: TopupFormProps) {
       </section>
 
       {/* ========================================================= */}
-      {/* STEP 3: Payment Method (Bakong KHQR) */}
+      {/* STEP 3: Payment Method Selection */}
       {/* ========================================================= */}
       <section className="rounded-2xl p-4 sm:p-6 lg:p-7 bg-white dark:bg-[#0c101e] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
         <div className="flex items-center justify-between mb-4 sm:mb-5">
@@ -542,7 +544,7 @@ export function TopupForm({ game }: TopupFormProps) {
               3
             </span>
             <h2 className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 dark:text-white">
-              វិធីសាស្ត្រទូទាត់ប្រាក់ (Payment Method)
+              ជ្រើសរើសវិធីសាស្ត្រទូទាត់ប្រាក់ (Payment Method)
             </h2>
           </div>
           <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-[10px] sm:text-xs font-semibold">
@@ -550,32 +552,94 @@ export function TopupForm({ game }: TopupFormProps) {
           </span>
         </div>
 
-        <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-rose-50 to-white dark:from-[#0c1424] dark:to-[#0a0d18] border-2 border-red-400/50 dark:border-red-500/40 relative overflow-hidden shadow-sm dark:shadow-none">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#c51f26] flex items-center justify-center text-white font-display font-black text-[10px] sm:text-xs shadow-md p-1 flex-shrink-0">
-                <span className="tracking-tighter text-center leading-none">KHQR<br />BAKONG</span>
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-                    Bakong KHQR ស្វ័យប្រវត្តិ
-                  </h3>
-                  <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-700 dark:text-red-300 font-bold">
-                    Official NBC
-                  </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          {/* OPTION 1: ABA PayWay & ABA Mobile */}
+          <div
+            onClick={() => setPaymentMethod("ABA")}
+            className={`cursor-pointer p-4 rounded-xl border-2 transition-all relative overflow-hidden ${
+              paymentMethod === "ABA"
+                ? "bg-gradient-to-br from-cyan-500/10 via-teal-500/5 to-transparent border-[#005f82] dark:border-cyan-400 shadow-md"
+                : "bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-[#005f82] flex items-center justify-center text-white font-display font-black text-xs shadow-md p-1 flex-shrink-0">
+                  <span className="tracking-widest text-center leading-none">ABA<br /><span className="text-[8px] font-normal opacity-90">PayWay</span></span>
                 </div>
-                <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                  ស្កេនបានគ្រប់ធនាគារទាំងអស់៖ ABA, ACLEDA, Wing, Canadia, Sathapana & More
-                </p>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                      ABA PayWay & ABA Mobile
+                    </h3>
+                    <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-[#005f82] dark:text-cyan-300 font-bold">
+                      1-Tap Pay
+                    </span>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                    ស្កេន ABA KHQR ឬចុចបើក App ABA Mobile បង់ភ្លាមៗ 1-Tap
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <div
+                  className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                    paymentMethod === "ABA"
+                      ? "border-cyan-500 dark:border-cyan-400 bg-cyan-500 dark:bg-cyan-400"
+                      : "border-slate-300 dark:border-slate-600 bg-transparent"
+                  }`}
+                >
+                  {paymentMethod === "ABA" && (
+                    <Check className="w-2.5 h-2.5 text-white dark:text-slate-950 stroke-[3]" />
+                  )}
+                </div>
               </div>
             </div>
+          </div>
 
-            <div className="flex items-center gap-2 self-end sm:self-center">
-              <div className="w-4 h-4 rounded-full bg-emerald-500 dark:bg-emerald-400 flex items-center justify-center flex-shrink-0">
-                <Check className="w-2.5 h-2.5 text-white dark:text-slate-950 stroke-[3]" />
+          {/* OPTION 2: Bakong KHQR (All Banks) */}
+          <div
+            onClick={() => setPaymentMethod("BAKONG")}
+            className={`cursor-pointer p-4 rounded-xl border-2 transition-all relative overflow-hidden ${
+              paymentMethod === "BAKONG"
+                ? "bg-gradient-to-br from-rose-500/10 via-red-500/5 to-transparent border-[#c51f26] dark:border-red-400 shadow-md"
+                : "bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-[#c51f26] flex items-center justify-center text-white font-display font-black text-[10px] shadow-md p-1 flex-shrink-0">
+                  <span className="tracking-tighter text-center leading-none">KHQR<br />BAKONG</span>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                      Bakong KHQR (គ្រប់ធនាគារ)
+                    </h3>
+                    <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-700 dark:text-red-300 font-bold">
+                      All Banks
+                    </span>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                    ស្កេនបានគ្រប់ធនាគារទាំងអស់៖ ACLEDA, Wing, Canadia & More
+                  </p>
+                </div>
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400">បានជ្រើសរើស (Selected)</span>
+
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <div
+                  className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                    paymentMethod === "BAKONG"
+                      ? "border-red-500 dark:border-red-400 bg-red-500 dark:bg-red-400"
+                      : "border-slate-300 dark:border-slate-600 bg-transparent"
+                  }`}
+                >
+                  {paymentMethod === "BAKONG" && (
+                    <Check className="w-2.5 h-2.5 text-white dark:text-slate-950 stroke-[3]" />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -615,17 +679,25 @@ export function TopupForm({ game }: TopupFormProps) {
           type="button"
           onClick={handleOpenCheckout}
           disabled={isSubmitting || !selectedPackage}
-          className="w-full md:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-emerald-400 to-teal-400 hover:from-cyan-400 hover:to-emerald-300 text-slate-950 font-bold text-xs sm:text-sm tracking-wide shadow-neon-cyan hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`w-full md:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed ${
+            paymentMethod === "ABA"
+              ? "bg-gradient-to-r from-[#005f82] via-[#007b9e] to-teal-500 hover:from-[#004d6b] hover:to-teal-400 shadow-[#005f82]/30"
+              : "bg-gradient-to-r from-red-600 via-rose-500 to-red-700 hover:from-red-500 hover:to-rose-600 shadow-red-500/30"
+          }`}
         >
           {isSubmitting ? (
             <>
-              <RotateCw className="w-4 h-4 animate-spin text-slate-950 flex-shrink-0" />
+              <RotateCw className="w-4 h-4 animate-spin text-white flex-shrink-0" />
               <span>កំពុងបង្កើត QR Code...</span>
             </>
           ) : (
             <>
-              <Zap className="w-4 h-4 text-slate-950 group-hover:animate-bounce flex-shrink-0" />
-              <span>ទូទាត់ប្រាក់តាម KHQR (Pay with KHQR)</span>
+              <Zap className="w-4 h-4 text-amber-300 group-hover:animate-bounce flex-shrink-0" />
+              <span>
+                {paymentMethod === "ABA"
+                  ? "ទូទាត់ប្រាក់តាម ABA PayWay / Mobile"
+                  : "ទូទាត់ប្រាក់តាម Bakong KHQR"}
+              </span>
               <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform flex-shrink-0" />
             </>
           )}
@@ -685,12 +757,18 @@ export function TopupForm({ game }: TopupFormProps) {
       {showQRModal && activeOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
           <div className="bg-white dark:bg-[#0b101d] border border-cyan-500/40 rounded-2xl sm:rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl relative space-y-4 sm:space-y-5 overflow-hidden max-h-[92vh] overflow-y-auto">
-            {/* Top Red KHQR Banner */}
-            <div className="relative -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 bg-[#d32f2f] text-white py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between shadow-md">
+            {/* Top Payment Gateway Banner */}
+            <div
+              className={`relative -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 text-white py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between shadow-md ${
+                paymentMethod === "ABA"
+                  ? "bg-gradient-to-r from-[#005f82] to-[#007b9e]"
+                  : "bg-[#d32f2f]"
+              }`}
+            >
               <div className="flex items-center gap-2">
                 <QrCode className="w-5 h-5 text-white flex-shrink-0" />
                 <span className="font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase">
-                  Bakong KHQR
+                  {paymentMethod === "ABA" ? "ABA PayWay (ABA Mobile KHQR)" : "Bakong KHQR (All Banks)"}
                 </span>
               </div>
               <button
@@ -729,8 +807,10 @@ export function TopupForm({ game }: TopupFormProps) {
                   unoptimized
                 />
               </div>
-              <div className="text-[11px] font-bold text-slate-800 tracking-wider mt-2 font-display uppercase">
-                ANAJAK DIAMOND • PHNOM PENH
+              <div className="text-[11px] font-bold text-slate-800 tracking-wider mt-2 font-display uppercase text-center">
+                {paymentMethod === "ABA"
+                  ? "ABA PAYWAY KHQR • ស្កេនបានគ្រប់ធនាគារ"
+                  : "BAKONG KHQR • ANAJAK DIAMOND"}
               </div>
             </div>
 
