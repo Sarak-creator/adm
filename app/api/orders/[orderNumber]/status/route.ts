@@ -16,6 +16,28 @@ export async function GET(
       );
     }
 
+    // If order is PENDING, check status with ABA PayWay in real-time
+    if (order.paymentStatus === "PENDING") {
+      try {
+        const { checkPaywayTransaction } = await import("@/lib/aba-payway");
+        const paywayCheck = await checkPaywayTransaction(order.orderNumber);
+
+        // status 0 or "0" means Approved / Paid
+        if (paywayCheck.success && (paywayCheck.status === 0 || paywayCheck.status === "0")) {
+          const fulfillResult = await dbService.processPaymentAndFulfill(order.orderNumber);
+          if (fulfillResult.order) {
+            order.paymentStatus = fulfillResult.order.paymentStatus;
+            order.fulfillmentStatus = fulfillResult.order.fulfillmentStatus;
+            order.moogoldOrderId = fulfillResult.order.moogoldOrderId;
+            order.paidAt = fulfillResult.order.paidAt;
+            order.completedAt = fulfillResult.order.completedAt;
+          }
+        }
+      } catch (checkErr) {
+        console.warn("ABA PayWay status check error:", checkErr);
+      }
+    }
+
     // Check if expired
     if (order.paymentStatus === "PENDING" && order.qrExpiresAt) {
       const now = new Date();

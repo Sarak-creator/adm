@@ -51,14 +51,49 @@ export async function POST(req: NextRequest) {
     // 2. Generate Unique Order Number
     const orderNumber = generateOrderNumber();
 
-    // 3. Generate dynamic Bakong KHQR payload with 5-minute countdown
-    const khqrResult = await createDynamicKHQR({
-      orderNumber,
-      amountUSD: packageItem.sellingPriceUSD,
-      amountKHR: packageItem.sellingPriceKHR,
-      currency,
-      expiresInMinutes: 5,
-    });
+    // 3. Attempt dynamic ABA PayWay QR creation first (with official ABA KHQR & Mobile Deeplink)
+    let qrCodeString = "";
+    let qrCodeDataUrl = "";
+    let abapayDeeplink: string | undefined;
+    let appCheckoutUrl: string | undefined;
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+    try {
+      const { createPaywayPurchase } = await import("@/lib/aba-payway");
+      const paywayRes = await createPaywayPurchase({
+        orderNumber,
+        amountUSD: packageItem.sellingPriceUSD,
+        items: [
+          {
+            name: `${game.name} - ${packageItem.name}`,
+            quantity: 1,
+            price: packageItem.sellingPriceUSD,
+          },
+        ],
+      });
+
+      if (paywayRes.success && paywayRes.qrString) {
+        qrCodeString = paywayRes.qrString;
+        qrCodeDataUrl = paywayRes.qrImage || "";
+        abapayDeeplink = paywayRes.abapayDeeplink;
+        appCheckoutUrl = paywayRes.appCheckoutUrl;
+      }
+    } catch (abaErr) {
+      console.warn("ABA PayWay call failed, falling back to local Bakong KHQR:", abaErr);
+    }
+
+    // If ABA PayWay not configured or failed, fallback to local Bakong KHQR generator
+    if (!qrCodeString || !qrCodeDataUrl) {
+      const khqrResult = await createDynamicKHQR({
+        orderNumber,
+        amountUSD: packageItem.sellingPriceUSD,
+        amountKHR: packageItem.sellingPriceKHR,
+        currency,
+        expiresInMinutes: 5,
+      });
+      qrCodeString = khqrResult.qrString;
+      qrCodeDataUrl = khqrResult.qrDataUrl;
+    }
 
     // 4. Save Pending Order to Database
     const order = await dbService.createOrder({
@@ -68,9 +103,9 @@ export async function POST(req: NextRequest) {
       inGameUserId,
       inGameZoneId,
       inGameNickname,
-      qrCodeString: khqrResult.qrString,
-      qrCodeDataUrl: khqrResult.qrDataUrl,
-      qrExpiresAt: khqrResult.expiresAt,
+      qrCodeString,
+      qrCodeDataUrl,
+      qrExpiresAt: expiresAt,
     });
 
     return NextResponse.json({
@@ -90,9 +125,11 @@ export async function POST(req: NextRequest) {
         displayAmount: currency === "USD" ? order.amountUSD : order.amountKHR,
         paymentStatus: order.paymentStatus,
         fulfillmentStatus: order.fulfillmentStatus,
-        qrCodeString: khqrResult.qrString,
-        qrCodeDataUrl: khqrResult.qrDataUrl,
-        qrExpiresAt: khqrResult.expiresAt.toISOString(),
+        qrCodeString,
+        qrCodeDataUrl,
+        qrExpiresAt: expiresAt.toISOString(),
+        abapayDeeplink,
+        appCheckoutUrl,
       },
     });
   } catch (error: unknown) {

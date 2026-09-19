@@ -22,6 +22,8 @@ import {
   Share2,
   Download,
   X,
+  Smartphone,
+  ExternalLink,
 } from "lucide-react";
 
 interface TopupFormProps {
@@ -55,6 +57,8 @@ export function TopupForm({ game }: TopupFormProps) {
     currency: "USD" | "KHR";
     qrCodeDataUrl: string;
     qrExpiresAt: string;
+    abapayDeeplink?: string | null;
+    appCheckoutUrl?: string | null;
   } | null>(null);
 
   // Countdown Timer
@@ -177,6 +181,8 @@ export function TopupForm({ game }: TopupFormProps) {
           currency,
           qrCodeDataUrl: data.order.qrCodeDataUrl,
           qrExpiresAt: data.order.qrExpiresAt,
+          abapayDeeplink: data.order.abapayDeeplink,
+          appCheckoutUrl: data.order.appCheckoutUrl,
         });
         setTimeLeft(180); // 3 minutes countdown
         setShowQRModal(true);
@@ -779,6 +785,25 @@ export function TopupForm({ game }: TopupFormProps) {
                 </div>
               </div>
             </div>
+
+            {/* 1-Tap ABA Mobile App Button (if deeplink available) */}
+            {activeOrder.abapayDeeplink && (
+              <div className="space-y-1.5 pt-1">
+                <a
+                  href={activeOrder.abapayDeeplink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 px-4 rounded-xl bg-[#005f82] hover:bg-[#004a66] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-[#005f82]/30 hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  <Smartphone className="w-4 h-4 text-cyan-300 animate-pulse flex-shrink-0" />
+                  <span>បើកក្នុងកម្មវិធី ABA Mobile (1-Tap Pay)</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-70 flex-shrink-0" />
+                </a>
+                <p className="text-[10px] text-center text-slate-500 dark:text-slate-400">
+                  📱 សម្រាប់អ្នកប្រើទូរស័ព្ទ៖ ចុចប៊ូតុងខាងលើដើម្បីបើកកម្មវិធី ABA Mobile បង់ភ្លាមៗ
+                </p>
+              </div>
+            )}
 
             {/* Status Pulse Indicator */}
             <div className="flex items-center justify-center gap-2 text-xs text-cyan-600 dark:text-cyan-400 py-1 font-medium">
