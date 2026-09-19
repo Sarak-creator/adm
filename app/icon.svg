@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="diamondGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Shield -->
+  <rect width="32" height="32" rx="8" fill="url(#diamondGrad)" />
+  <rect x="1.5" y="1.5" width="29" height="29" rx="6.5" fill="#070b16" />
+  <rect x="1.5" y="1.5" width="29" height="29" rx="6.5" fill="url(#glowGrad)" />
+  
+  <!-- Glowing Diamond Vector -->
+  <g fill="none" stroke="url(#diamondGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" transform="translate(4, 4)">
+    <polygon points="6 3 18 3 22 9 12 22 2 9" fill="rgba(0, 240, 255, 0.12)" />
+    <polyline points="11 3 8 9 12 22 16 9 13 3" />
+    <line x1="2" y1="9" x2="22" y2="9" />
+  </g>
+</svg>

@@ -33,6 +33,11 @@ export const metadata: Metadata = {
   title: "អាណាចក្រDiamond (Diamond Kingdom) | បញ្ចូលពេជ្រហ្គេមទាន់ចិត្ត Bakong KHQR",
   description: "វេទិកាបញ្ចូលពេជ្រហ្គេមផ្លូវការនៅកម្ពុជា Mobile Legends, Free Fire, PUBG Mobile, Genshin Impact តាមរយៈ Bakong KHQR ស្វ័យប្រវត្តិកាត់ប្រាក់និងចូលពេជ្រភ្លាមៗក្នុងរយៈពេល 5 វិនាទី!",
   keywords: ["Top up MLBB Cambodia", "Bakong KHQR Diamond", "អាណាចក្រDiamond", "បញ្ចូលពេជ្រ MLBB", "MooGold Cambodia", "Free Fire Diamonds", "PUBG UC KHQR"],
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default async function RootLayout({

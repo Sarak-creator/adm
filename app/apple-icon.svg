@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <defs>
+    <linearGradient id="appleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <radialGradient id="appleGlow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#060913" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Background Shield -->
+  <rect width="180" height="180" rx="40" fill="#070b16" />
+  <rect x="4" y="4" width="172" height="172" rx="36" fill="url(#appleGlow)" stroke="url(#appleGrad)" stroke-width="4" />
+  
+  <!-- Glowing Diamond Vector -->
+  <g fill="none" stroke="url(#appleGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" transform="translate(30, 30)">
+    <polygon points="30 15 90 15 110 45 60 110 10 45" fill="rgba(0, 240, 255, 0.15)" />
+    <polyline points="55 15 40 45 60 110 80 45 65 15" />
+    <line x1="10" y1="45" x2="110" y2="45" />
+  </g>
+</svg>
