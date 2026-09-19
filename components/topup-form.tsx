@@ -222,6 +222,41 @@ export function TopupForm({ game }: TopupFormProps) {
 
     pollIntervalRef.current = setInterval(async () => {
       try {
+        // If ABA PayWay, poll the dedicated check-status endpoint first
+        if (paymentMethod === "ABA") {
+          const paywayCheckRes = await fetch("/api/payway/check-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tranId: activeOrder.orderNumber }),
+          });
+          const paywayData = await paywayCheckRes.json();
+          if (paywayData.paid) {
+            setIsPolling(false);
+            if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+            setShowQRModal(false);
+
+            // Fetch final order info
+            const orderRes = await fetch(`/api/orders/${activeOrder.orderNumber}/status`);
+            const orderData = await orderRes.json();
+            const order = orderData.order || {};
+
+            setCompletedOrder({
+              orderNumber: order.orderNumber || activeOrder.orderNumber,
+              inGameNickname: order.inGameNickname || verifiedName,
+              inGameUserId: order.inGameUserId || userId,
+              inGameZoneId: order.inGameZoneId || zoneId,
+              diamondsCount: order.diamondsCount || 0,
+              packageName: order.packageName || selectedPackage?.name || "Diamonds",
+              amountUSD: activeOrder.amountUSD,
+              amountKHR: activeOrder.amountKHR,
+              moogoldOrderId: order.moogoldOrderId,
+              completedAt: order.completedAt || new Date().toISOString(),
+            });
+            return;
+          }
+        }
+
+        // Standard status route check
         const res = await fetch(`/api/orders/${activeOrder.orderNumber}/status`);
         const data = await res.json();
 
@@ -250,7 +285,7 @@ export function TopupForm({ game }: TopupFormProps) {
       } catch (e) {
         console.error("Polling error", e);
       }
-    }, 2000);
+    }, 3000);
 
     return () => {
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
