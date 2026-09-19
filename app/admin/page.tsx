@@ -403,6 +403,13 @@ export default function AdminPage() {
     fetchBalance();
     fetchOrders();
     fetchGames();
+
+    // Auto-refresh live orders every 5 seconds in Admin Console
+    const ordersInterval = setInterval(() => {
+      fetchOrders();
+    }, 5000);
+
+    return () => clearInterval(ordersInterval);
   }, []);
 
   // ==========================================
