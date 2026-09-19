@@ -128,8 +128,8 @@ export function generateCheckTransactionHash(
 export async function createPaywayPurchase(
   params: CreatePaywayPurchaseParams
 ): Promise<PaywayPurchaseResult> {
-  const merchantId = (await getConfig("ABA_PAYWAY_MERCHANT_ID")) || process.env.ABA_PAYWAY_MERCHANT_ID;
-  const apiKey = (await getConfig("ABA_PAYWAY_API_KEY")) || process.env.ABA_PAYWAY_API_KEY;
+  const merchantId = (await getConfig("ABA_PAYWAY_MERCHANT_ID")) || process.env.ABA_PAYWAY_MERCHANT_ID || "ec478611";
+  const apiKey = (await getConfig("ABA_PAYWAY_API_KEY")) || process.env.ABA_PAYWAY_API_KEY || "743F9E262F9673DE1809CCE505BB4A4E6F15E7A6";
   const apiUrl =
     (await getConfig("ABA_PAYWAY_API_URL")) ||
     process.env.ABA_PAYWAY_API_URL ||
@@ -263,8 +263,8 @@ export async function createPaywayPurchase(
 export async function checkPaywayTransaction(
   tranId: string
 ): Promise<PaywayCheckTransactionResult> {
-  const merchantId = (await getConfig("ABA_PAYWAY_MERCHANT_ID")) || process.env.ABA_PAYWAY_MERCHANT_ID;
-  const apiKey = (await getConfig("ABA_PAYWAY_API_KEY")) || process.env.ABA_PAYWAY_API_KEY;
+  const merchantId = (await getConfig("ABA_PAYWAY_MERCHANT_ID")) || process.env.ABA_PAYWAY_MERCHANT_ID || "ec478611";
+  const apiKey = (await getConfig("ABA_PAYWAY_API_KEY")) || process.env.ABA_PAYWAY_API_KEY || "743F9E262F9673DE1809CCE505BB4A4E6F15E7A6";
   const checkUrl =
     (await getConfig("ABA_PAYWAY_CHECK_URL")) ||
     process.env.ABA_PAYWAY_CHECK_URL ||

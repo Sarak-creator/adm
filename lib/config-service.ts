@@ -61,8 +61,24 @@ export async function getConfig(key: string): Promise<string | null> {
     console.warn(`Database query failed for setting '${key}', falling back to process.env:`, dbErr);
   }
 
-  // Fallback to process.env if not configured in database
-  const envFallback = process.env[key] || null;
+const STATIC_DEFAULTS: Record<string, string> = {
+  MOOGOLD_BASE_URL: "https://moogold.com/wp-json/v1/api",
+  MOOGOLD_SANDBOX_MODE: "true",
+  BAKONG_ACCOUNT_ID: "anajak_diamond@aclb",
+  BAKONG_MERCHANT_NAME: "ANAJAK DIAMOND",
+  BAKONG_MERCHANT_CITY: "Phnom Penh",
+  BAKONG_WEBHOOK_SECRET: "khqr_secret_token_cam_2026",
+  ABA_PAYWAY_MERCHANT_ID: "ec478611",
+  ABA_PAYWAY_API_KEY: "743F9E262F9673DE1809CCE505BB4A4E6F15E7A6",
+  ABA_PAYWAY_API_URL: "https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/purchase",
+  ABA_PAYWAY_CHECK_URL: "https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/check-transaction-2",
+  EXCHANGE_RATE_USD_KHR: "4100",
+  ADMIN_SECRET_PATH: "portal-anachak-9821",
+  ADMIN_2FA_PIN: "982100",
+};
+
+  // Fallback to process.env or static defaults if not configured in database
+  const envFallback = process.env[key] || STATIC_DEFAULTS[key] || null;
   memoryCache.set(key, {
     value: envFallback,
     expiresAt: now + CACHE_TTL_MS,
