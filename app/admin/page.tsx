@@ -232,13 +232,89 @@ export default function AdminPage() {
   const [isUploadingBanner, setIsUploadingBanner] = useState(false);
   const [isUploadingIcon, setIsUploadingIcon] = useState(false);
 
+  // Client-side image compression for Vercel upload (prevents Vercel 4.5MB payload limit & speeds up display)
+  const compressImageClient = async (
+    file: File,
+    maxWidth: number,
+    maxHeight: number,
+    quality = 0.85
+  ): Promise<File> => {
+    // Preserve vectors and animated GIFs
+    if (file.type === "image/svg+xml" || file.type === "image/gif") {
+      return file;
+    }
+    // Skip already small images (< 150KB)
+    if (file.size < 150 * 1024) {
+      return file;
+    }
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            resolve(file);
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                resolve(file);
+                return;
+              }
+              const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
+              const compressedFile = new File([blob], file.name, {
+                type: outputType,
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            },
+            file.type === "image/png" ? "image/png" : "image/jpeg",
+            quality
+          );
+        };
+        img.onerror = () => resolve(file);
+        img.src = event.target?.result as string;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileUpload = async (file: File, type: "banner" | "icon") => {
     if (type === "banner") setIsUploadingBanner(true);
     else setIsUploadingIcon(true);
 
     try {
+      // Client-side image optimization
+      const optimizedFile = await compressImageClient(
+        file,
+        type === "banner" ? 1600 : 512,
+        type === "banner" ? 900 : 512,
+        0.85
+      );
+
+      if (optimizedFile.size > 4.5 * 1024 * 1024) {
+        showToast("ទំហំរូបភាពធំពេក (កុំឱ្យលើស 4.5MB សម្រាប់ដំណើរការលើ Vercel)", "error");
+        return;
+      }
+
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", optimizedFile);
       const res = await fetch("/api/admin/upload", {
         method: "POST",
         body: fd,
@@ -256,7 +332,7 @@ export default function AdminPage() {
       }
     } catch (e: unknown) {
       const err = e as Error;
-      showToast(err.message, "error");
+      showToast(err.message || "Upload មានបញ្ហា", "error");
     } finally {
       if (type === "banner") setIsUploadingBanner(false);
       else setIsUploadingIcon(false);
