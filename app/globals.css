@@ -82,6 +82,14 @@ html.light .neon-border-emerald {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+html.light .glass-card {
+  background: #ffffff;
+  backdrop-filter: blur(12px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+  color: #0f172a;
+}
+
 .glass-card-hover {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -92,6 +100,98 @@ html.light .neon-border-emerald {
   transform: translateY(-3px);
   box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.2);
 }
+
+html.light .glass-card-hover:hover {
+  background: #ffffff;
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.15);
+}
+
+/* =======================================================
+   ADMIN PORTAL LIGHT MODE HIGH-CONTRAST SYSTEM
+   Ensures crystal clear text, crisp cards & clean inputs
+   ======================================================= */
+html.light .admin-portal {
+  color: #0f172a;
+}
+
+html.light .admin-portal h1,
+html.light .admin-portal h2,
+html.light .admin-portal h3,
+html.light .admin-portal h4 {
+  color: #0f172a !important;
+}
+
+html.light .admin-portal .text-white {
+  color: #0f172a !important;
+}
+
+html.light .admin-portal .text-slate-300,
+html.light .admin-portal .text-slate-400 {
+  color: #334155 !important;
+}
+
+html.light .admin-portal .text-slate-500 {
+  color: #64748b !important;
+}
+
+html.light .admin-portal .border-slate-800,
+html.light .admin-portal .border-slate-700 {
+  border-color: #e2e8f0 !important;
+}
+
+html.light .admin-portal .bg-slate-900,
+html.light .admin-portal .bg-slate-950 {
+  background-color: #f8fafc !important;
+  color: #0f172a;
+  border-color: #e2e8f0 !important;
+}
+
+html.light .admin-portal .bg-slate-900\/80,
+html.light .admin-portal .bg-slate-950\/80,
+html.light .admin-portal .bg-slate-950\/60,
+html.light .admin-portal .bg-slate-950\/40,
+html.light .admin-portal .bg-slate-950\/70,
+html.light .admin-portal .bg-slate-900\/60 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a;
+  border-color: #e2e8f0 !important;
+}
+
+html.light .admin-portal input,
+html.light .admin-portal select,
+html.light .admin-portal textarea {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html.light .admin-portal input::placeholder,
+html.light .admin-portal textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.light .admin-portal table thead tr {
+  background-color: #f8fafc !important;
+  border-bottom-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+html.light .admin-portal table tbody tr:hover {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .admin-portal table tbody tr {
+  border-color: #f1f5f9 !important;
+}
+
+html.light .admin-portal .modal-box {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

@@ -179,7 +179,7 @@ export const DEFAULT_LANDING_CONFIG: LandingPageConfig = {
     ctaLink: "/games/mobile-legends",
     secondaryBadgeText: "MooGold Live Reseller API",
     backgroundImageUrl: "/images/hero-bg.jpg",
-    bgOpacity: 45,
+    bgOpacity: 100,
     themeColor: "cyan",
     trustBadges: [
       { id: "tb1", icon: "Zap", text: "ចូលពេជ្រក្នុង 5 វិនាទី" },

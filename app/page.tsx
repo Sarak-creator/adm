@@ -147,15 +147,16 @@ export default async function HomePage() {
       // 2. Hero Section
       case "hero": {
         const hero = landingConfig.hero;
-        const opacityPercent = typeof hero.bgOpacity === "number" ? hero.bgOpacity : 45;
+        const opacityPercent = typeof hero.bgOpacity === "number" ? hero.bgOpacity : 100;
         const imageOpacity = Math.min(Math.max(opacityPercent / 100, 0), 1);
+        const isFullClarity = imageOpacity >= 0.85;
 
         return (
           <div
             key="hero"
-            className={`relative rounded-2xl sm:rounded-3xl overflow-hidden border ${theme.border} bg-gradient-to-br from-sky-50/80 via-slate-50 to-emerald-50/70 dark:bg-[#070b16] p-5 sm:p-8 lg:p-14 ${theme.shadow} min-h-[360px] sm:min-h-[420px] flex items-center shadow-md dark:shadow-none`}
+            className={`relative rounded-2xl sm:rounded-3xl overflow-hidden border ${theme.border} bg-white dark:bg-[#070b16] p-5 sm:p-8 lg:p-14 ${theme.shadow} min-h-[380px] sm:min-h-[440px] flex items-center shadow-lg transition-all`}
           >
-            {/* Full-Bleed Background Image Layer with Admin-Controlled Opacity */}
+            {/* Full-Bleed Background Image Layer with Admin-Controlled Opacity (Crystal Clear 100% when opened) */}
             <div className="absolute inset-0 z-0">
               <Image
                 src={hero.backgroundImageUrl || "/images/hero-bg.jpg"}
@@ -164,11 +165,19 @@ export default async function HomePage() {
                 priority
                 unoptimized
                 style={{ opacity: imageOpacity }}
-                className="object-cover object-right lg:object-center mix-blend-luminosity scale-105 transition-opacity duration-300"
+                className="object-cover object-right lg:object-center scale-100 transition-opacity duration-300"
               />
-              {/* Gradients Overlay for Crystal Clear Text Readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-50/95 via-slate-50/85 to-slate-50/40 dark:from-[#070b16] dark:via-[#070b16]/95 sm:dark:via-[#070b16]/90 dark:to-[#070b16]/60 sm:dark:to-[#070b16]/40" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-50/90 via-transparent to-slate-50/40 dark:from-[#070b16] dark:via-transparent dark:to-[#070b16]/50" />
+              {/* Directional Scrim Overlay: Soft text protection on the left, right artwork stays 100% crystal clear */}
+              <div
+                className={`absolute inset-0 transition-opacity duration-300 pointer-events-none ${
+                  isFullClarity
+                    ? "bg-gradient-to-r from-white/90 via-white/50 to-transparent dark:from-[#070b16]/90 dark:via-[#070b16]/50 dark:to-transparent"
+                    : "bg-gradient-to-r from-white/95 via-white/80 to-white/40 dark:from-[#070b16] dark:via-[#070b16]/90 dark:to-[#070b16]/50"
+                }`}
+              />
+              {!isFullClarity && (
+                <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent dark:from-[#070b16]/80 dark:via-transparent dark:to-transparent pointer-events-none" />
+              )}
             </div>
 
             {/* Ambient Glow Effects */}

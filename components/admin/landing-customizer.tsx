@@ -914,12 +914,12 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
 
             <div className="flex gap-3 items-center">
               {config.hero.backgroundImageUrl && (
-                <div className="relative w-28 h-16 rounded-xl overflow-hidden border border-slate-700 flex-shrink-0 bg-slate-900">
+                <div className="relative w-28 h-16 rounded-xl overflow-hidden border border-slate-700 flex-shrink-0 bg-slate-900 shadow-sm">
                   <img
                     src={config.hero.backgroundImageUrl}
                     alt="Hero Preview"
                     className="w-full h-full object-cover"
-                    style={{ opacity: (config.hero.bgOpacity ?? 45) / 100 }}
+                    style={{ opacity: (config.hero.bgOpacity ?? 100) / 100 }}
                   />
                 </div>
               )}
@@ -945,11 +945,11 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
                     <span>កម្រិតពន្លឺថ្លាផ្ទៃ Hero Card (Hero Card Opacity)</span>
                   </label>
                   <p className="text-[11px] text-slate-400">
-                    កំណត់កម្រិតភាពច្បាស់នៃរូបភាពផ្ទៃខាងក្រោយ Hero Banner (0% = ងងឹតសុទ្ធ / 100% = ភ្លឺពេញលេញ)
+                    កំណត់កម្រិតភាពច្បាស់នៃរូបភាពផ្ទៃខាងក្រោយ Hero Banner (0% = ងងឹតសុទ្ធ / 100% = ភ្លឺច្បាស់ពេញលេញ Full HD)
                   </p>
                 </div>
                 <div className="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-mono font-bold text-xs">
-                  {config.hero.bgOpacity ?? 45}%
+                  {config.hero.bgOpacity ?? 100}%
                 </div>
               </div>
 
@@ -961,7 +961,7 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
                   min="0"
                   max="100"
                   step="5"
-                  value={config.hero.bgOpacity ?? 45}
+                  value={config.hero.bgOpacity ?? 100}
                   onChange={(e) =>
                     setConfig((prev) => ({
                       ...prev,
@@ -980,11 +980,10 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
               <div className="flex flex-wrap items-center gap-2 pt-1">
                 <span className="text-[11px] text-slate-400">Presets:</span>
                 {[
-                  { label: "ស្រអាប់ទន់ (20%)", val: 20 },
-                  { label: "លំនាំដើម (35%)", val: 35 },
+                  { label: "ស្រអាប់ទន់ (25%)", val: 25 },
                   { label: "មធ្យម (50%)", val: 50 },
-                  { label: "ច្បាស់ (70%)", val: 70 },
-                  { label: "ភ្លឺខ្លាំង (100%)", val: 100 },
+                  { label: "ច្បាស់ (75%)", val: 75 },
+                  { label: "ភ្លឺច្បាស់ 100% (Full HD)", val: 100 },
                 ].map((preset) => (
                   <button
                     key={preset.val}
@@ -999,7 +998,7 @@ export function LandingCustomizer({ onShowToast }: LandingCustomizerProps) {
                       }))
                     }
                     className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all ${
-                      (config.hero.bgOpacity ?? 45) === preset.val
+                      (config.hero.bgOpacity ?? 100) === preset.val
                         ? "bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-sm"
                         : "bg-slate-900 text-slate-400 hover:text-white border-slate-800 hover:border-slate-700"
                     }`}

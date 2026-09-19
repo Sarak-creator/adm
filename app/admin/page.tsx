@@ -718,7 +718,7 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="admin-portal space-y-8 pb-16">
       {/* Toast Notification */}
       {toastMessage && (
         <div
@@ -738,15 +738,15 @@ export default function AdminPage() {
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-bold font-display">
+            <span className="px-2.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-600 dark:text-amber-400 text-xs font-bold font-display">
               ADMIN CONSOLE
             </span>
-            <span className="text-xs text-slate-400">គ្រប់គ្រងទិន្នន័យ Supabase Database</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">គ្រប់គ្រងទិន្នន័យ Supabase Database</span>
           </div>
-          <h1 className="text-2xl lg:text-3xl font-black text-white mt-1">
+          <h1 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white mt-1">
             អាណាចក្រDiamond Control Center
           </h1>
         </div>
@@ -759,16 +759,16 @@ export default function AdminPage() {
             disabled={isUpdatingTheme}
             className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border transition-all shadow-sm hover:scale-[1.02] active:scale-95 ${
               currentTheme === "light"
-                ? "bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30 shadow-amber-500/10"
+                ? "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:bg-amber-500/30 shadow-amber-500/10"
                 : "bg-cyan-950/70 text-cyan-300 border-cyan-500/40 hover:bg-cyan-900/70 shadow-cyan-500/10"
             }`}
             title="ប្តូរ Dark Mode / Light Mode សម្រាប់គេហទំព័រទាំងមូល (Live Change on Landing Page)"
           >
             {currentTheme === "light" ? (
               <>
-                <Sun className={`w-3.5 h-3.5 text-amber-400 ${isUpdatingTheme ? "animate-spin" : ""}`} />
+                <Sun className={`w-3.5 h-3.5 text-amber-500 ${isUpdatingTheme ? "animate-spin" : ""}`} />
                 <span>របៀបពន្លឺ (Light Mode)</span>
-                <span className="px-1.5 py-0.2 rounded text-[10px] bg-amber-400/20 text-amber-300 font-mono">
+                <span className="px-1.5 py-0.2 rounded text-[10px] bg-amber-500/20 text-amber-700 font-mono font-bold">
                   LIVE
                 </span>
               </>
@@ -776,7 +776,7 @@ export default function AdminPage() {
               <>
                 <Moon className={`w-3.5 h-3.5 text-cyan-400 ${isUpdatingTheme ? "animate-spin" : ""}`} />
                 <span>របៀបងងឹត (Dark Mode)</span>
-                <span className="px-1.5 py-0.2 rounded text-[10px] bg-cyan-400/20 text-cyan-300 font-mono">
+                <span className="px-1.5 py-0.2 rounded text-[10px] bg-cyan-400/20 text-cyan-300 font-mono font-bold">
                   LIVE
                 </span>
               </>
@@ -793,7 +793,7 @@ export default function AdminPage() {
               showToast("បានទាញទិន្នន័យចុងក្រោយពី Supabase រួចរាល់!");
             }}
             disabled={isLoadingBalance || isLoadingGames}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-2 border border-slate-700 transition-all"
+            className="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-2 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoadingBalance || isLoadingGames ? "animate-spin" : ""}`} />
             <span>Refresh Live Data</span>
@@ -803,7 +803,7 @@ export default function AdminPage() {
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="px-3.5 py-2 rounded-xl bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-semibold flex items-center gap-1.5 border border-red-500/30 transition-all hover:scale-[1.02] active:scale-95"
+            className="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 text-red-600 dark:text-red-300 text-xs font-semibold flex items-center gap-1.5 border border-red-200 dark:border-red-500/30 transition-all hover:scale-[1.02] active:scale-95"
             title="ចាកចេញពីប្រព័ន្ធ (Logout)"
           >
             <LogOut className={`w-3.5 h-3.5 ${isLoggingOut ? "animate-spin" : ""}`} />
@@ -815,53 +815,53 @@ export default function AdminPage() {
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* MooGold Balance Card */}
-        <div className="glass-card rounded-2xl p-5 border-slate-800 relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+        <div className="glass-card rounded-2xl p-5 border-slate-200 dark:border-slate-800 relative overflow-hidden shadow-sm dark:shadow-none">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
             <span>MooGold Reseller Wallet</span>
-            <Wallet className="w-4 h-4 text-cyan-400" />
+            <Wallet className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />
           </div>
-          <div className="text-2xl font-black font-display text-cyan-400">
+          <div className="text-2xl font-black font-display text-cyan-600 dark:text-cyan-400">
             {balance !== null ? formatUSD(balance) : "$1,450.75"}
           </div>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-emerald-400">
+          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>MooGold API Live Synchronized</span>
           </div>
         </div>
 
         {/* Total Gross Volume USD */}
-        <div className="glass-card rounded-2xl p-5 border-slate-800">
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+        <div className="glass-card rounded-2xl p-5 border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
             <span>Total Volume (USD)</span>
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
+            <TrendingUp className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
           </div>
-          <div className="text-2xl font-black font-display text-white">
+          <div className="text-2xl font-black font-display text-slate-900 dark:text-white">
             {formatUSD(totalUSD)}
           </div>
-          <div className="text-[11px] text-slate-400 font-display mt-2">
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 font-display mt-2">
             ≈ {formatKHR(totalKHR)}
           </div>
         </div>
 
         {/* Active Games in Supabase */}
-        <div className="glass-card rounded-2xl p-5 border-slate-800">
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+        <div className="glass-card rounded-2xl p-5 border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
             <span>Active Games (Supabase)</span>
-            <Gamepad2 className="w-4 h-4 text-purple-400" />
+            <Gamepad2 className="w-4 h-4 text-purple-500 dark:text-purple-400" />
           </div>
-          <div className="text-2xl font-black font-display text-purple-400">
-            {games.length} <span className="text-xs text-slate-400 font-normal">Games</span>
+          <div className="text-2xl font-black font-display text-purple-600 dark:text-purple-400">
+            {games.length} <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">Games</span>
           </div>
-          <div className="text-[11px] text-slate-400 mt-2">
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">
             {packages.length} Diamond Packages Total
           </div>
         </div>
 
         {/* Orders Count Card */}
-        <div className="glass-card rounded-2xl p-5 border-slate-800">
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+        <div className="glass-card rounded-2xl p-5 border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
             <span>Fulfilled Orders</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
           </div>
           <div className="text-2xl font-black font-display text-emerald-400">
             {completedCount} <span className="text-xs text-slate-400 font-normal">/ {orders.length} Total</span>
@@ -873,19 +873,19 @@ export default function AdminPage() {
       </div>
 
       {/* Navigation Tabs for CRUD Modules */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto scrollbar-none flex-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto scrollbar-none flex-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
         <button
           type="button"
           onClick={() => setActiveTab("orders")}
           className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "orders"
-              ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-cyan-500 text-slate-950 shadow-md dark:shadow-neon-cyan"
+              : "bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none"
           }`}
         >
           <ShoppingBag className="w-4 h-4" />
           <span>ការកុម្ម៉ង់ (Orders Management)</span>
-          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950/40">
+          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-100 dark:bg-slate-950/40 text-slate-700 dark:text-slate-300">
             {orders.length}
           </span>
         </button>
@@ -895,13 +895,13 @@ export default function AdminPage() {
           onClick={() => setActiveTab("games")}
           className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "games"
-              ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-cyan-500 text-slate-950 shadow-md dark:shadow-neon-cyan"
+              : "bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none"
           }`}
         >
           <Gamepad2 className="w-4 h-4" />
           <span>គ្រប់គ្រងហ្គេម (Games CRUD)</span>
-          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950/40">
+          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-100 dark:bg-slate-950/40 text-slate-700 dark:text-slate-300">
             {games.length}
           </span>
         </button>
@@ -918,13 +918,13 @@ export default function AdminPage() {
           }}
           className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "packages"
-              ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-cyan-500 text-slate-950 shadow-md dark:shadow-neon-cyan"
+              : "bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none"
           }`}
         >
           <Diamond className="w-4 h-4" />
           <span>គ្រប់គ្រងកញ្ចប់ពេជ្រ (Packages CRUD)</span>
-          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950/40">
+          <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-100 dark:bg-slate-950/40 text-slate-700 dark:text-slate-300">
             {packages.length}
           </span>
         </button>
@@ -941,8 +941,8 @@ export default function AdminPage() {
           }}
           className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "landing"
-              ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-cyan-500 text-slate-950 shadow-md dark:shadow-neon-cyan"
+              : "bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none"
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -961,8 +961,8 @@ export default function AdminPage() {
           }}
           className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === "settings"
-              ? "bg-cyan-500 text-slate-950 shadow-neon-cyan"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-cyan-500 text-slate-950 shadow-md dark:shadow-neon-cyan"
+              : "bg-white dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none"
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
